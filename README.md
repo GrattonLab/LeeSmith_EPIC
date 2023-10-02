@@ -19,8 +19,8 @@ Require "session_numbering.xlsx". <br/>
 5. EPIC_stability_method1 <br/>
 6. EPIC_stability_method2 <br/>
 
-< Robinson and Steyvers' (2023) data analyses scripts > <br/>
-Analyze Robinson and Steyvers' flanker task data to draw stability curves (Fig. 4 and Supp. Fig. 10), <br/>
+< Public dataset 1 analysis scripts > <br/>
+Analyze Robinson and Steyvers' (2023) flanker task data to draw stability curves (Fig. 4 and Supp. Fig. 10), <br/>
 run simulations of two model cases of small versus large trial sampling (Fig. 5), <br/>
 examine rank order consistency between congruency effect and incongruent trial performance (Supp. Fig. 6A), <br/>
 and conduct drift-diffusion modeling (Fig. 8; require "ezdiffusion.m"). <br/>
@@ -37,8 +37,8 @@ Runs a series of simulations to examine how within-subject variability contaimat
 No dataset or files required. <br/>
 11. EPIC_simulation_variability <br/>
 
-< Hedge et al.'s (2018) data analyses scripts > <br/>
-Analyze and simulate Hedge et al.'s flanker and Stroop task data to conduct drift-diffusion modeling (Fig. 8 and Supp. Fig. 11), <br/>
+< Public dataset 2 analysis scripts > <br/>
+Analyze and simulate Hedge et al.'s (2018) flanker and Stroop task data to conduct drift-diffusion modeling (Fig. 8 and Supp. Fig. 11), <br/>
 factor analysis (Supp. Fig. 12), <br/>
 and rank order consistency (Fig. 7 & Supp. Fig. 6B-C). <br/>
 Require "ezdiffusion.m" for script#s 13 and 18 and ICC.m. <br/>
