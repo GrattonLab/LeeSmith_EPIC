@@ -1,9 +1,15 @@
 # LeeSmith_EPIC
-Last modified on 10/02/2023 <br/>
+Last modified on 10/25/2023 <br/>
 Any questions or oddities, email Hyejin J. Lee hl22z@fsu.edu <br/>
 
+# Overview
 The following is the list of Matlab scripts for replicating the EPIC project results (Lee, Smith, Hauenstein, Dwortetsky, Kraus, Dorn, Nee, and Gratton, under review). <br/>
 You can download the EPIC data at https://osf.io/jk9nb <br/>
+
+# System Requirements
+All scripts are written and tested in Matlab 2021b.
+See this link for Matlab system requirements: https://www.mathworks.com/support/requirements/matlab-system-requirements.html <br/>
+and this link to install Matlab: https://www.mathworks.com/help/install/install-products.html
 
 < Preprocessing scripts > <br/>
 Preprocess the EPIC data to plot violin plots and grand mean plots (Fig. 2 and Supp. Fig. 1-5). <br/>
