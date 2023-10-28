@@ -29,7 +29,7 @@ Require "session_numbering.xlsx". <br/>
 Analyze Robinson and Steyvers' (2023) flanker task data to draw stability curves (Fig. 4 and Supp. Fig. 10), <br/>
 run simulations of two model cases of small versus large trial sampling (Fig. 5), <br/>
 examine rank order consistency between congruency effect and incongruent trial performance (Supp. Fig. 6A), <br/>
-and conduct drift-diffusion modeling (Fig. 8; require "ezdiffusion.m"). <br/>
+and conduct drift-diffusion modeling (Fig. 8; require "ezdiffusion.m", which can be downloaded at https://osf.io/jk9nb). <br/>
 Require a Matlab function, ICC.m (download at https://www.mathworks.com/matlabcentral/fileexchange/22099-intraclass-correlation-coefficient-icc), <br/>
 and shadedErrorBar.m (https://www.mathworks.com/matlabcentral/fileexchange/26311-raacampbell-shadederrorbar). <br/>
 Download Robinson and Steyvers' data at https://osf.io/6hjwv/ <br/>
