@@ -10,6 +10,7 @@ You can download the EPIC data at https://osf.io/jk9nb <br/>
 All Matlab scripts are written and tested in Matlab 2021b. <br/>
 See this link for Matlab system requirements: https://www.mathworks.com/support/requirements/matlab-system-requirements.html <br/>
 and this link to install Matlab: https://www.mathworks.com/help/install/install-products.html <br/>
+The installation can take as long as 30 minutes depending on your computer model. <br/>
 
 The code employed in the supplemental materials for comparing traditional and Bayesian estimates uses the following software packages and code libraries. <br/>
 Link to download WinBUGS: https://www.mrc-bsu.cam.ac.uk/wp-content/uploads/2018/04/OpenBUGS323setup.zip <br/>
