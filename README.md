@@ -64,3 +64,9 @@ Download Hedge et al.'s data at https://osf.io/cwzds/ <br/>
 16. EPIC_Hedge_simulation_rankOrder [Fig 7. & Supp. Fig. 6C] <br/>
 17. EPIC_Hedge_rankOrder [Supp. Fig. 6B] <br/>
 18. EPIC_Hedge_EZdiffusion [Fig. 8] <br/>
+
+< Bayesian simulation code > <br/>
+Bayesian_Sim.R simulates data (25 replications) of reaction time data for a congruency task. Parameters for the simulation were chosen based on estimates from Robinson and Steyvers (2023). The number of trials, subjects, and the ratio of within-subject variance to between-subject variance in congruency effect can be manipulated at the start of the code. Once the 25 datasets have been simulated, several estimation procedures are performed: <br/>
+In step 1, a multilevel model using the lme4 package is used in order to obtain unbiased estimates of between-subject variability in the congruency effect and trial-level variability in reaction time within subjects. The code also generates bias and precision (mean absolute deviation) values for these estimates. <br/>
+In step 2, Bayesian estimates of subject-level congruency effects are obtained using WinBUGS. For the variance terms in the priors, the unbiased estimates from step 1 are used. The code also generates bias and precision (mean absolute deviation) values for these Bayesian estimates. Note that the Bayesian model file ("Cong.txt") should be saved into the working directory for this step. <br/>
+In step 3, a more traditional (non-Bayesian) approach is used to estimate subject-level congruency effects. In an initial step, mean reaction times are calculated for each person for congruent and incongruent trials (no priors are incorporated into estimation, so no shrinkage occurs). In step 2, the difference between these means is calculated to obtain the congruency effect for each subject. Bias and precision (mean absolute deviation) values are also generated for the estimates.
