@@ -1,0 +1,13 @@
+model{
+for (i in 1:N){
+y[i,1]~dnorm(mu1[i],prec_error)
+mu1[i]<-b0[y[i,3]]+b1[y[i,3]]*y[i,4]
+}
+
+
+for (p in 1:P){
+b0[p]~dnorm(mu_b0,prec_b0)
+b1[p]~dnorm(mu_b1,prec_b1)
+}
+
+}
