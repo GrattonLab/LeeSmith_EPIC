@@ -2,16 +2,17 @@
 % EPIC
 %
 % To run this script:
-% You need Hedge et al.'s (2018) flankertask data 
+% You need Hedge et al.'s (2018) flanker task data
 % (download at https://osf.io/cwzds/)
 % You also need ICC.m (download at
 % https://www.mathworks.com/matlabcentral/fileexchange/22099-intraclass-correlation-coefficient-icc)
 %
 % What this script does:
-% Rank order consistency between incongruent trials RT and CE
+% Rank order consistency as a function of sample size and number of trials
 %
 % What this script outputs:
-% Supp. Figs. 6C and 6F
+% Figure. 7: Heatmap of the ICC for the rank orders between the true mean
+% and the apparent mean
 %
 % Created on 05/02/2023 by HJ Lee
 % Last modified on 07/05/2023
@@ -187,124 +188,75 @@ U_a = copularnd('t',[1 rho_a; rho_a 1], nu, bs_dist_n);
 X1_a = ksdensity(GaccMat(1,:),U_a(:,1),'function','icdf','width',.008);
 X2_a = ksdensity(GaccMat(2,:),U_a(:,2),'function','icdf','width',.01);
 
-%% Simulation - Rank order comparison between CE and incongruent trials (Supp. Fig. 6C, 6F)
+%% Simulation - Rank order consistency as a function of sample size and numbers of trials per subject (Figure. 6)
 % Preassignment
-nsSubj = 500;
-nsTrials = 3200;  % the amount sufficient for highly reliable results
-ceMr = nan(nsSubj,numTest);  % CE RT
-IncMr = nan(nsSubj,numTest);  % incongruent trial mean
-ceMa = nan(nsSubj,numTest);  % accuracy
-IncMa = nan(nsSubj,numTest);
+nSubject = [50 100 200 300 400 500 1000 2000 4000];
+rnkCCs = nan(length(nTdrawn),length(nSubject),numTest);  % Spearman correlation of the ranks between true mean and apparent mean
+rnkCCk = nan(length(nTdrawn),length(nSubject),numTest);  % Kendall's tau
+ICCr = nan(length(nTdrawn),length(nSubject),numTest);  % ICC
+rnkBN = nan(length(nTdrawn),length(nSubject),numTest);  % 1(same)/0(diff) binary
 
-% Between-subject distribution
-%bs_dist_RT_c = X1_r;
-%bs_dist_RT_i = X2_r;
-bs_dist_Acc_c = X1_a;  % accuracy
-bs_dist_Acc_i = X2_a;
-bs_dist_Acc_c(find(bs_dist_Acc_c>1)) = [];
-bs_dist_Acc_i(find(bs_dist_Acc_i>1)) = [];
-minI = min(length(bs_dist_Acc_c),length(bs_dist_Acc_i));
+% Between-subject joint distribution
+bs_dist_RT_c = X1_r;  % RT con
+bs_dist_RT_i = X2_r;  % inc
 for l = 1:numTest
-    randIDr = randperm(nsSubj);
-    randIDa = randperm(nsSubj);
-    for i = 1:nsSubj
-        % True mean
-        ws_mean_RT_c = bs_dist_RT_c(randIDr(i));
-        ws_mean_RT_i = bs_dist_RT_i(randIDr(i));
-        ws_mean_Acc_c = bs_dist_Acc_c(randIDa(i));
-        ws_mean_Acc_i = bs_dist_Acc_i(randIDa(i));
-
-        disp(['Subject# ' num2str(i) '[' num2str(nsSubj) '] - Testing ' num2str(l) '[' num2str(numTest) ']'])
-        % within-subject distribution
-        ws_dist_RT_c = randn(1,ws_dist_n)*m_ws_std_RT(1)+ws_mean_RT_c;
-        ws_dist_RT_i = randn(1,ws_dist_n)*m_ws_std_RT(2)+ws_mean_RT_i;
-        ws_dist_Acc_c = randn(1,ws_dist_n)*m_ws_std_Acc(1)+ws_mean_Acc_c;
-        ws_dist_Acc_i = randn(1,ws_dist_n)*m_ws_std_Acc(2)+ws_mean_Acc_i;
-        ws_dist_Acc_c(find(ws_dist_Acc_c>1)) = [];  % accuracy should not exceed 1
-        ws_dist_Acc_i(find(ws_dist_Acc_i>1)) = [];
-
-        rtC = [];
-        rtI = [];
-        accC = [];
-        accI = [];
-        for j = 1:nsTrials  % number of trials drawn
-            rtC = [rtC; ws_dist_RT_c(randi(ws_dist_n,1,1))+normrnd(0,nzsigr)];  % add random noise
-            rtI = [rtI; ws_dist_RT_i(randi(ws_dist_n,1,1))+normrnd(0,nzsigr)];
-            accC = [accC; ws_dist_Acc_c(randi(length(ws_dist_Acc_c),1,1))+normrnd(0,nzsiga)];
-            accI = [accI; ws_dist_Acc_i(randi(length(ws_dist_Acc_i),1,1))+normrnd(0,nzsiga)];
+    for k = 1:length(nTdrawn)  % var1: number of trials
+        for n = 1:length(nSubject)  % var2: sample size
+            % preassignment
+            trueM = nan(nSubject(n),1);  % true mean
+            appM = nan(nSubject(n),1);
+            randid = randperm(nSubject(n));
+            for i = 1:nSubject(n)
+                disp(['Testing ' num2str(l) ' - Sampling size: ' num2str(k) ', Sample size: ' num2str(n) ' in progress of subject#' num2str(i)])
+                ws_mean_RT_c = bs_dist_RT_c(randid(i));
+                ws_mean_RT_i = bs_dist_RT_i(randid(i));
+                trueM(i,1) = ws_mean_RT_i-ws_mean_RT_c;  % store true mean CE
+                % within-subject distribution
+                ws_dist_RT_c = randn(1,ws_dist_n)*m_ws_std_RT(1)+ws_mean_RT_c;
+                ws_dist_RT_i = randn(1,ws_dist_n)*m_ws_std_RT(2)+ws_mean_RT_i;
+                rtC = [];
+                rtI = [];
+                for j = 1:nTdrawn(k)  % number of trials drawn
+                    rtC = [rtC; ws_dist_RT_c(randi(ws_dist_n,1,1))+normrnd(0,nzsigr)];
+                    rtI = [rtI; ws_dist_RT_i(randi(ws_dist_n,1,1))+normrnd(0,nzsigr)];
+                end
+                %appM(i,1) = trimmean(rtI,15)-trimmean(rtC,15);
+                %appM(i,1) = mean(rmoutliers(rtI,"mean"))-mean(rmoutliers(rtC,"mean"))
+                appM(i,1) = mean(rtI)-mean(rtC);
+            end
+            % rank order
+            [~,p1] = sort(trueM,'descend');
+            r1 = 1:length(trueM);  % nSubject(n)
+            r1(p1) = r1;
+            [~,p2] = sort(appM,'descend');
+            r2 = 1:length(appM);
+            r2(p2) = r2;
+            % Spearman's correlation
+            rnkCCs(k,n,l) = corr(r1',r2','type','Spearman');
+            % Kendall's tau
+            rnkCCk(k,n,l) = corr(r1',r2','type','kendall');
+            % ICC
+            [r,LB,UB,F,df1,df2,p] = ICC([r1',r2'],'C-k',0.05);  % 'A-k'
+            ICCr(k,n,l) = r;
+            % Binary map
+            rnkBN(k,n,l) = sum(r1==r2)/length(r1);
         end
-        %ceMr(i,l) = trimmean(rtI,15)-trimmean(rtC,15);
-        %ceMr(i,l) = mean(rmoutliers(rtI,"mean"))-mean(rmoutliers(rtC,"mean"));
-        ceMr(i,l) = mean(rtI)-mean(rtC);
-        %IncMr(i,l) = trimmean(rtI,15);
-        %IncMr(i,l) = mean(rmoutliers(rtI,"mean"));
-        IncMr(i,l) = mean(rtI);
-        ceMa(i,l) = 100.*((1-mean(accI))-(1-mean(accC)));  % proportion correct (%)
-        IncMa(i,l) = 100.*(1-mean(accI));
     end
 end
-%save('rankcompareCEincSIM','ceMr','IncMr','ceMa','IncMa')
-%load rankcompareCEincSIM
+%save('rankOrderConsistencySIM','rnkCCs','rnkCCk','ICCr','rnkBN')
+%load rankOrderConsistencySIM
 
-% rank order
-clear r1 r2
-% (1) RT
-[~,p1] = sort(mean(IncMr,2),'descend');
-r1 = 1:nsSubj;
-r1(p1) = r1;
-[~,p2] = sort(mean(ceMr,2),'descend');
-r2 = 1:nsSubj;
-r2(p2) = r2;
-% Spearman's correlation coefficient
-Rcei = corr(r1',r2','type','Spearman');
-% Kendall's tau
-TAUcei = corr(r1',r2','type','kendall');
+%% Plot - heatmap
 % ICC
-ICCcei = ICC([r1',r2'],'A-k',0.05);  % 'A-k'
-
 figure
-scatter(mean(IncMr,2),mean(ceMr,2),'filled','MarkerFaceColor',[0 .7 .7],...
-    'MarkerEdgeColor',[0 .4 .4])
-%lsline
-refline
-axis square
-set(gca,'FontSize',16)
-str = sprintf('  Tau = %1.2f\n  ICC = %1.2f', TAUcei, ICCcei);
-rText = text(min(get(gca,'xlim')),max(get(gca,'ylim')), str);
-set(rText, 'fontsize', 16, 'verticalalignment', 'top', 'horizontalalignment', 'left');
-%xlim([0.3 1.1])
-xlabel('Incongruent trial reaction time (sec)','FontSize',16)
-%ylim([0 0.2])
-ylabel('Congruency effect reaction time (sec)','FontSize',16)
-%title('C) Simulated data: Extended sampling','FontSize',19)
-
-% (2) Percent correct
-clear r1 r2
-[~,p1] = sort(mean(IncMa,2),'descend');
-r1 = 1:nsSubj;
-r1(p1) = r1;
-[~,p2] = sort(mean(ceMa,2),'descend');
-r2 = 1:nsSubj;
-r2(p2) = r2;
-% Spearman's correlation coefficient
-Rcei = corr(r1',r2','type','Spearman');
-% Kendall's tau
-TAUcei = corr(r1',r2','type','kendall');
-% ICC
-ICCcei = ICC([r1',r2'],'A-k',0.05);
-
-figure
-scatter(mean(IncMa,2),mean(ceMa,2),'filled','MarkerFaceColor',[0 .7 .7],...
-    'MarkerEdgeColor',[0 .4 .4])
-%lsline
-refline
-axis square
-set(gca,'FontSize',16)
-str = sprintf('  Tau = %1.2f\n  ICC = %1.2f', TAUcei, ICCcei);
-rText = text(min(get(gca,'xlim')),max(get(gca,'ylim')), str);
-set(rText, 'fontsize', 16, 'verticalalignment', 'top', 'horizontalalignment', 'left');
-%xlim([0 50])
-xlabel('Incongruent trial percent correct (%)','FontSize',16)
-%ylim([])
-ylabel('Congruency effect percent correct (%)','FontSize',16)
-%title('F) Simulated data: Extended sampling','FontSize',19)
+%h = heatmap(round(mean(ICCr,3).*100)/100,'ColorLimits',[0 1]);
+h = heatmap(round(mean(ICCr,3).*100)/100,'ColorLimits',[0 1],'CellLabelColor','none');
+h.XLabel = 'Number of subjects';
+h.YLabel = 'Number of trials';
+Xlabels = nSubject;
+Ylabels = nCond*nTdrawn;
+h.FontSize = 15;
+h.XDisplayLabels = Xlabels;
+h.YDisplayLabels = Ylabels;
+%h.Title = 'Correlation coefficients of the true and apparent rank orders';
+h.Colormap = spring;

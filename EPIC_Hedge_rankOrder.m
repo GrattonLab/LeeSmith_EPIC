@@ -2,7 +2,7 @@
 % EPIC
 %
 % To run this sciprt:
-% You need Hedge et al.'s (2018) flanker and Stroop task data 
+% You need Hedge et al.'s (2018) flanker task data 
 % (download at https://osf.io/cwzds/)
 % You also need ICC.m (download at
 % https://www.mathworks.com/matlabcentral/fileexchange/22099-intraclass-correlation-coefficient-icc)
@@ -11,7 +11,7 @@
 % Plots the rank correlation coefficients between CE and incongruent trial
 %
 % What this script outputs:
-% Supp. Fig. 5B
+% Supp. Figs. 6B and 6E
 %
 % Created on 05/16/2023 by HJ Lee
 % Last modified on 07/03/2023
@@ -166,17 +166,18 @@ r2(p2) = r2;
 tauH = corr(r1',r2','type','kendall');
 iccH = ICC([r1',r2'],'A-k',0.05);
 figure
-scatter(GrtMatH(2,:),GrtMatH(2,:)-GrtMatH(1,:),'filled')
+scatter(GrtMatH(2,:),GrtMatH(2,:)-GrtMatH(1,:),'filled','MarkerFaceColor',[0 .7 .7],...
+    'MarkerEdgeColor',[0 .4 .4])
 %lsline
 refline
 axis square
-set(gca,'FontSize',13)
+set(gca,'FontSize',16)
 str = sprintf('  Tau = %1.2f\n  ICC = %1.2f', tauH, iccH);
 rText = text(min(get(gca,'xlim')),max(get(gca,'ylim')), str);
-set(rText, 'fontsize', 14, 'verticalalignment', 'top', 'horizontalalignment', 'left');
-xlabel('Incongruent trial RT (sec)','FontSize',14)
-ylabel('CE RT (sec)','FontSize',14)
-title('Hedge et al.''s (2018) data','FontSize',15)
+set(rText, 'fontsize', 16, 'verticalalignment', 'top', 'horizontalalignment', 'left');
+xlabel('Incongruent trial reaction time (sec)','FontSize',16)
+ylabel('Congruency effect reaction time (sec)','FontSize',16)
+%title('Hedge et al.''s (2018) data','FontSize',19)
 % (2) Accuracy
 GpeMatH = 100.*(1-GaccMatH);
 [~,p1] = sort(GpeMatH(2,:)-GpeMatH(1,:),'descend');
@@ -189,14 +190,15 @@ r2(p2) = r2;
 tauH = corr(r1',r2','type','kendall');
 iccH = ICC([r1',r2'],'A-k',0.05);
 figure
-scatter(GpeMatH(2,:),GpeMatH(2,:)-GpeMatH(1,:),'filled')
+scatter(GpeMatH(2,:),GpeMatH(2,:)-GpeMatH(1,:),'filled','MarkerFaceColor',[0 .7 .7],...
+    'MarkerEdgeColor',[0 .4 .4])
 %lsline
 refline
 axis square
-set(gca,'FontSize',13)
+set(gca,'FontSize',16)
 str = sprintf('  Tau = %1.2f\n  ICC = %1.2f', tauH, iccH);
 rText = text(min(get(gca,'xlim')),max(get(gca,'ylim')), str);
-set(rText, 'fontsize', 14, 'verticalalignment', 'top', 'horizontalalignment', 'left');
-xlabel('Incongruent trial percent correct (%)','FontSize',14)
-ylabel('CE percent correct (%)','FontSize',14)
-title('Hedge et al.''s (2018) data','FontSize',15)
+set(rText, 'fontsize', 16, 'verticalalignment', 'top', 'horizontalalignment', 'left');
+xlabel('Incongruent trial error rate (%)','FontSize',16)
+ylabel('Congruency effect error rate (%)','FontSize',16)
+%title('Hedge et al.''s (2018) data','FontSize',19)

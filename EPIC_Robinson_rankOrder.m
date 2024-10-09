@@ -16,7 +16,7 @@
 % (c) Below 2500 trials
 %
 % What this script outputs:
-% Supp. Fig. 6A
+% Supp. Fig. 6A and 6D
 %
 % Created on 05/16/2023 by HJ Lee
 % Last modified on 07/03/2023
@@ -137,19 +137,20 @@ r2(p2) = r2;
 tauH = corr(r1',r2','type','kendall');
 iccH = ICC([r1',r2'],'A-k',0.05);
 figure
-scatter(GrtMatR(2,:),GrtMatR(2,:)-GrtMatR(1,:),'filled')
+scatter(GrtMatR(2,:),GrtMatR(2,:)-GrtMatR(1,:),'filled','MarkerFaceColor',[0 .7 .7],...
+    'MarkerEdgeColor',[0 .4 .4])
 lsline
 % refline
 axis square
-set(gca,'FontSize',13)
+set(gca,'FontSize',16)
 str = sprintf('  Tau = %1.2f\n  ICC = %1.2f', tauH, iccH);
 %str = sprtinf('  Tau = %1.2f', tauH);
 rText = text(min(get(gca,'xlim')),max(get(gca,'ylim')), str);
-set(rText, 'fontsize', 14, 'verticalalignment', 'top', 'horizontalalignment', 'left');
-xlabel('Incongruent trial RT (sec)','FontSize',14)
-ylabel('CE RT (sec)','FontSize',14)
-title('Robinson & Steyvers'' (2023) data','FontSize',15)
-% (2) Accuracy
+set(rText, 'fontsize', 16, 'verticalalignment', 'top', 'horizontalalignment', 'left');
+xlabel('Incongruent trial reaction time (sec)','FontSize',16)
+ylabel('Congruency effect reaction time (sec)','FontSize',16)
+%title('Robinson & Steyvers'' (2023) data','FontSize',19)
+% (2) Percent error
 GpeMatR = 100.*(1-GaccMatR);
 [~,p1] = sort(GpeMatR(2,:)-GpeMatR(1,:),'descend');
 r1 = 1:l_sGrp;
@@ -161,16 +162,17 @@ r2(p2) = r2;
 tauH = corr(r1',r2','type','kendall');
 iccH = ICC([r1',r2'],'A-k',0.05);
 figure
-scatter(GpeMatR(2,:),GpeMatR(2,:)-GpeMatR(1,:),'filled')
+scatter(GpeMatR(2,:),GpeMatR(2,:)-GpeMatR(1,:),'filled','MarkerFaceColor',[0 .7 .7],...
+    'MarkerEdgeColor',[0 .4 .4])
 lsline
 % refline
 axis square
-%ylim([-0.02 0.15])  % accuracy
-set(gca,'FontSize',13)
+%ylim([-0.02 0.15])
+set(gca,'FontSize',16)
 str = sprintf('  Tau = %1.2f\n  ICC = %1.2f', tauH, iccH);
 %str = sprintf('  Tau = %1.2f', tauH);
 rText = text(min(get(gca,'xlim')),max(get(gca,'ylim')), str);
-set(rText, 'fontsize', 14, 'verticalalignment', 'top', 'horizontalalignment', 'left');
-xlabel('Incongruent trial percent correct(%)','FontSize',14)
-ylabel('CE percent correct (%)','FontSize',14)
-title('Robinson & Steyvers'' (2023) data','FontSize',15)
+set(rText, 'fontsize', 16, 'verticalalignment', 'top', 'horizontalalignment', 'left');
+xlabel('Incongruent trial error rate (%)','FontSize',16)
+ylabel('Congruency effect error rate (%)','FontSize',16)
+%title('Robinson & Steyvers'' (2023) data','FontSize',19)

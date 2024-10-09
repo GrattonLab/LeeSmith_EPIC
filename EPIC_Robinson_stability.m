@@ -6,21 +6,21 @@
 % https://osf.io/6hjwv/)
 %
 % What this script does:
-% Plots the stability curves with method 2 (width of 95% confidence interval)
-% and between-subject standard deviation as a function of number of trials
+% Plots the stability curves with method 2 (width of 95% confidence
+% interval of the mean congruency effect)
+% and between-subject standard deviation as a function of number of trials.
 % Drops the INITIAL four sessions
 %
 % Exclusion criteria:
 % (a) Below 70% accuracy in either experimental conditions (congruent/incongruent)
-% (b) Sessions with 0% accuracy
-% (c) Below 2500 trials
+% (b) 0% accuracy in any session
+% (c) Below 2500 correctly responded trials
 %
 % What this script outputs:
-% Figure 4. RT; compare within-subject variance and between-subject variance
-% Supp. Fig. 11. Accuracy
+% Figure 4.
 %
 % Created on 12/17/2022 by HJ Lee
-% Last modified on 06/30/2023
+% Last modified on 12/20/2023
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear all
 close all
@@ -34,10 +34,10 @@ load FlankerData_learn
 %% Parameter settings
 tmpnSubj = length(d_flanker_tab);  % number of participants: 495
 taskStrng = 'Flanker';
-numTest = 5000;  % number of repetitions; for consistency with the EPIC data
 nCond = 2;  % congruent(1), incongruent(2)
-UpB = 97.5;
+UpB = 97.5;  % 95% confidence interval
 LwB = 2.5;
+numTest = 5000;  % number of repetitions; for consistency with the EPIC data
 
 %% Plot data x-axis: number of trials, y-axis: mean CE - BEFORE excluding participants
 nTrialMat = nan(tmpnSubj,1);  % number of trials; this differ across participants
@@ -55,13 +55,6 @@ for i = 1:tmpnSubj
     iRTdist{2,i} = iM;
     nTrialMatc(i) = length(cM)+length(iM);
 end
-%figure
-%scatter(nTrialMat,mCEmat)
-%xlabel('Number of Trials')
-%ylabel('RT CE (ms)')
-%ylim([-200 700])
-%legend('1 participant mean')
-%title(['Robinson & Steyvers'' (2023) Flanker Task Data (n=' num2str(tmpnSubj) ')'])
 
 %% 1. Preprocess data
 % Matrix definition and preassignment
@@ -77,7 +70,7 @@ conMSacc = cell(nStep,tmpnSubj);
 incMSacc = cell(nStep,tmpnSubj);
 
 % Break up data based on session and store them in matrices
-ageBin = nan(tmpnSubj,1);
+ageBin = nan(tmpnSubj,1);  % Each participant age
 for i = 1:tmpnSubj
     tmpT = table(d_flanker_tab{i,1}.agebin,d_flanker_tab{i,1}.trial_num,...
         double(d_flanker_tab{i,1}.compatible),d_flanker_tab{i,1}.accuracy,...
@@ -146,19 +139,19 @@ sGrp = find(nTrialMatexcld>lrg);
 l_sGrp = length(sGrp);  % 185
 
 %% Plot the learning curve - Does practice effect exist in Robinson's data?
-ceLC = nan(nStep,l_sGrp);
-for i = 1:l_sGrp
-    for j = 1:stepTL(sGrp(i))
-        ceLC(j,i) = mean(cell2mat(incMSrt(j,sGrp(i))),'omitnan')-mean(cell2mat(conMSrt(j,sGrp(i))),'omitnan');
-    end
-end
-cmapL = turbo(l_sGrp);
-figure
-for i = 1:l_sGrp
-    plot(ceLC(1:stepTL(sGrp(i)),i),'Color',cmapL(i,:),'LineWidth',1); hold on
-    xlabel('Session')
-    ylabel('RT CE (ms)')
-end
+% ceLC = nan(nStep,l_sGrp);
+% for i = 1:l_sGrp
+%     for j = 1:stepTL(sGrp(i))
+%         ceLC(j,i) = mean(cell2mat(incMSrt(j,sGrp(i))),'omitnan')-mean(cell2mat(conMSrt(j,sGrp(i))),'omitnan');
+%     end
+% end
+% cmapL = turbo(l_sGrp);
+% figure
+% for i = 1:l_sGrp
+%     plot(ceLC(1:stepTL(sGrp(i)),i),'Color',cmapL(i,:),'LineWidth',1); hold on
+%     xlabel('Session')
+%     ylabel('RT CE (ms)')
+% end
 
 %% Remove the initial 4 sessions
 rmvL = 1:4;
@@ -230,7 +223,7 @@ for i = 1:nSubj
     if rtAcc == 1
         % RT
         % Mean
-        CEmat(1:stepTL(i),i) = mean(incM-conM);  % 맞는지 확인
+        CEmat(1:stepTL(i),i) = mean(incM-conM);
         % 95% CI
         conIntvl(1:stepTL(i),i) = prctile(incM-conM,UpB)-prctile(incM-conM,LwB);
     elseif rtAcc == 2
@@ -259,48 +252,6 @@ end
 %     load RobinsonACCstabilityCurve2Variables
 % end
 
-%% Plot the results
-% 448 participants
-% cmap = turbo(nSubj);
-% figure
-% for i = 1:nSubj
-%     x = conNTi(1:stepTL(i),i)+incNTi(1:stepTL(i),i);
-%     h = plot(x,conIntvl(1:stepTL(i),i),'Color',cmap(i,:),'LineWidth',1.2); hold on
-%     set(get(h,'Parent'),'XScale','log')
-% end
-% xlabel('Number of Trials')
-% xlim([0 7000])
-% if rtAcc == 1
-%     ylabel('Width of 95% CI (ms)')
-%     %ylim([])
-% elseif rtAcc == 2
-%     ylabel('Width of 95% CI')
-%     %ylim([])
-% end
-% xticks([50 100 200 400 800 1600 3200 6400])
-% title('Robinson & Steyvers'' (2023) Stability Curve - Method 2')
-% grid on
-
-%% Plot only the parcitipants with more than 2500 trials
-% cmap = turbo(l_sGrp);
-% figure
-% for i = 1:l_sGrp
-%     id = sGrp(i);
-%     x = conNTi(1:stepTL(id),id)+incNTi(1:stepTL(id),id);
-%     h = plot(x,conIntvl(1:stepTL(id),id),'Color',cmap(i,:),'LineWidth',1); hold on
-%     %set(get(h,'Parent'),'XScale','log')
-% end
-% xlabel('Number of Trials')
-% xlim([0 4000])
-% if rtAcc == 1
-%     ylabel('Width of 95% CI (ms)')
-% elseif rtAcc == 2
-%     ylabel('Width of 95% CI')
-% end
-% %xticks([50 100 200 400 800 1600 3200 6400])
-% title(['Robinson & Steyvers'' (2023) Stability Curve: Method 2 (n=' num2str(l_sGrp) ')'])
-% grid on
-
 %% Between-Subject Variance
 % Use only the selected group (Participants with more than 2500)
 sgX = conNTi(:,sGrp)+incNTi(:,sGrp);
@@ -317,7 +268,7 @@ end
 idx = min(tmpSG);  % 50: the max number without nan. 50steps~2500 trials, 수정 전에 이렇고 수정 후엔 39, initial two blocks drop한 다음엔 35
 WI = nan(l_sGrp,idx);  % to get the group median of within-subject variance
 figure
-% Within-subject variance
+% Within-subject variability
 subplot(2,1,1)  % width of 95% CI
 for i = 1:l_sGrp
     id = sGrp(i);
@@ -325,40 +276,52 @@ for i = 1:l_sGrp
     h = plot(x,conIntvl(1:stepTL(id),id),'Color',[0.5 0.5 0.5],'LineWidth',1); hold on
     WI(i,:) = conIntvl(1:idx,id)';
 end
-h2 = plot(x(1:idx),median(WI),'Color','r','LineWidth',1.4);  % median
+h2 = plot(x(1:idx),median(WI),'Color','r','LineWidth',2);  % median
 %h2 = plot(x(1:idx),mean(WI),'Color','r','LineWidth',1);  % grand mean
+set(gca,'FontSize',14)
 set(get(h2,'Parent'),'XScale','log')
-xlabel('Number of trials','FontSize',12)
+xlabel('Number of trials','FontSize',15)
 %xlim([0 3500])  % As it is
 xlim([0 x(idx)])  % Cut off where there is fewer participants; less than 20 have more than 3500 trials
 xticks([50 100 200 400 800 1600])
 if rtAcc == 1
-    ylabel('Width of 95% CI (ms)','FontSize',12)
+    ylabel({'Width of 95%'; 'confidence interval (ms)'},'FontSize',15)
     %ylim([])
 elseif rtAcc == 2
-    ylabel('Width of 95% CI','FontSize',12)
+    ylabel({'Width of 95%'; 'confidence interval'},'FontSize',15)
     %ylim([])
 end
 grid on
-title('Within-Subject Variability','FontSize',13)
+if rtAcc == 1
+    title('A) Within-Subject Variability','FontSize',19)
+elseif rtAcc == 2
+    title('C) Within-Subject Variability','FontSize',19)
+end
 
-% Between-subject variance
+% Between-subject variability
 subplot(2,1,2)
-p = plot(sgXx,bsSD,'Color','b','LineWidth',1.4);
+p = plot(sgXx,bsSD,'Color','b','LineWidth',2);
+set(gca,'FontSize',14)
 set(get(p,'Parent'),'XScale','log')
-xlabel('Number of trials','FontSize',12)
+xlabel('Number of trials','FontSize',15)
 %xlim([0 3500])  % As it is
 xlim([0 x(idx)])  % Cut off where there is fewer participants
 xticks([50 100 200 400 800 1600])
 if rtAcc == 1
-    ylabel('Between-subject SD (ms)','FontSize',12)
-    ylim([20 80])
+    ylabel({'Between-subject'; 'standard deviation (ms)'},'FontSize',15)
+    ylim([20 70])  % [20 80]
 elseif rtAcc == 2
-    ylabel('Between-subject SD','FontSize',12)
+    ylabel({'Between-subject'; 'standard deviation'},'FontSize',15)
     %ylim([0 0.055])
 end
 grid on
-title('Between-Subject Variability','FontSize',13)
-if rtAcc == 2
-    sgtitle('Accuracy','FontSize',15)
+if rtAcc == 1
+    title('B) Between-Subject Variability','FontSize',19)
+elseif rtAcc == 2
+    title('D) Between-Subject Variability','FontSize',19)
 end
+% if rtAcc == 1
+%     sgtitle('Reaction Time','FontSize',25)
+% elseif rtAcc == 2
+%     sgtitle('Accuracy','FontSize',25)
+% end

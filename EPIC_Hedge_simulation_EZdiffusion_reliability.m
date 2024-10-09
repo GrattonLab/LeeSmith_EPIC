@@ -2,7 +2,7 @@
 % EPIC
 %
 % To run this script:
-% You need Hedge et al.'s (2018) flanker and Stroop task data 
+% You need Hedge et al.'s (2018) flanker task data 
 % (download at https://osf.io/cwzds/),
 % a Matlab function named "ezdiffusion.m" (download with EPIC data), and
 % ICC.m (download at
@@ -14,7 +14,8 @@
 % reliability of the modeling parameters
 % (RT needs to be in SECS to run EZ-diffusion modeling)
 %
-% What this script outputs: Figure 8
+% What this script outputs:
+% Supp. Fig. 20
 % Plot of the split-half reliability of the parameters,
 % drift rate, boundary separation, and nondecision time
 %
@@ -631,77 +632,79 @@ subplot(length(nTdrawn),2,2)
 title('Simulated data')
 sgtitle('CE - IntraClass Correlation (ICC)')
 
-% DDM parameters (difference scores) - Figure 8
-figure
+% DDM parameters (difference scores)
 for k = 1:length(nTdrawn)
     % 1) RT CE
-    subplot(length(nTdrawn),5,5*(k-1)+1)
-    scatter(ceDiff1(:,k),ceDiff2(:,k),8,cmap2(2,:),'filled')
-    %lsline
+    figure
+    scatter(ceDiff1(:,k),ceDiff2(:,k),120,cmap2(2,:),'filled')
     xlim([min([ceDiff1(:);ceDiff2(:)]) max([ceDiff1(:);ceDiff2(:)])])
     ylim([min([ceDiff1(:);ceDiff2(:)]) max([ceDiff1(:);ceDiff2(:)])])
+    ax = gca;
+    ax.FontSize = 36;
     [ICc] = ICC([ceDiff1(:,k),ceDiff2(:,k)],'A-k',0.05);
     str = sprintf(' ICC = %1.2f',ICc); clear ICc
     rText = text(min(get(gca, 'xlim')), max(get(gca, 'ylim')), str);
-    set(rText,'fontweight','bold','fontsize',7.4,'verticalalignment','top','horizontalalignment','left');
+    set(rText,'fontweight','bold','fontsize',40,'verticalalignment','top','horizontalalignment','left');
     refline
     axis square
-    ylabel(['N = ' num2str(2*nTdrawn(k))],'FontWeight','bold','FontSize',9.5)
+    %ylabel(['N = ' num2str(2*nTdrawn(k))],'FontWeight','bold','FontSize',9.5)
 
     % 2) Acc CE
-    subplot(length(nTdrawn),5,5*(k-1)+2)
-    scatter(ceDiffA1(:,k),ceDiffA2(:,k),8,cmap2(2,:),'filled')
-    %lsline
+    figure
+    scatter(ceDiffA1(:,k),ceDiffA2(:,k),120,cmap2(2,:),'filled')
     xlim([min([ceDiffA1(:);ceDiffA2(:)]) max([ceDiffA1(:);ceDiffA2(:)])])
     ylim([min([ceDiffA1(:);ceDiffA2(:)]) max([ceDiffA1(:);ceDiffA2(:)])])
+    ax = gca;
+    ax.FontSize = 36;
     [ICc] = ICC([ceDiffA1(:,k),ceDiffA2(:,k)],'A-k',0.05);
     str = sprintf(' ICC = %1.2f',ICc); clear ICc
     rText = text(min(get(gca, 'xlim')), max(get(gca, 'ylim')), str);
-    set(rText,'fontweight','bold','fontsize',7.4,'verticalalignment','top','horizontalalignment','left');
+    set(rText,'fontweight','bold','fontsize',40,'verticalalignment','top','horizontalalignment','left');
     refline
     axis square
 
     % 3) v
-    subplot(length(nTdrawn),5,5*(k-1)+3)
-    scatter(vDiff1(:,k),vDiff2(:,k),8,cmap1(1,:),'filled')
-    %lsline
+    figure
+    scatter(vDiff1(:,k),vDiff2(:,k),120,cmap1(1,:),'filled')
     xlim([min([vDiff1(:);vDiff2(:)]) max([vDiff1(:);vDiff2(:)])])
     ylim([min([vDiff1(:);vDiff2(:)]) max([vDiff1(:);vDiff2(:)])])
+    ax = gca;
+    ax.FontSize = 36;
     [ICc] = ICC([vDiff1(:,k),vDiff2(:,k)],'A-k',0.05);
     str = sprintf(' ICC = %1.2f',ICc); clear ICc
     rText = text(min(get(gca, 'xlim')), max(get(gca, 'ylim')), str);
-    set(rText,'fontweight','bold','fontsize',7.4,'verticalalignment','top','horizontalalignment','left');
+    set(rText,'fontweight','bold','fontsize',40,'verticalalignment','top','horizontalalignment','left');
     refline
     axis square
 
     % 4) a
-    subplot(length(nTdrawn),5,5*(k-1)+4)
-    scatter(aDiff1(:,k),aDiff2(:,k),8,cmap1(2,:),'filled')
-    %lsline
+    figure
+    scatter(aDiff1(:,k),aDiff2(:,k),120,cmap1(2,:),'filled')
     xlim([real(min([aDiff1(:);aDiff2(:)])) real(max([aDiff1(:);aDiff2(:)]))])
     ylim([real(min([aDiff1(:);aDiff2(:)])) real(max([aDiff1(:);aDiff2(:)]))])
+    %yticks([0.003 0.005 0.008 0.01])
+    ax = gca;
+    ax.FontSize = 36;
+    ax.XAxis.Exponent = 0;
+    ax.YAxis.Exponent = 0;
     [ICc] = ICC([aDiff1(:,k),aDiff2(:,k)],'A-k',0.05);
     str = sprintf(' ICC = %1.2f',ICc); clear ICc
     rText = text(min(get(gca, 'xlim')), max(get(gca, 'ylim')), str);
-    set(rText,'fontweight','bold','fontsize',7.4,'verticalalignment','top','horizontalalignment','left');
+    set(rText,'fontweight','bold','fontsize',40,'verticalalignment','top','horizontalalignment','left');
     refline
     axis square
 
     % 5) Ter
-    subplot(length(nTdrawn),5,5*(k-1)+5)
-    scatter(TerDiff1(:,k),TerDiff2(:,k),8,cmap1(3,:),'filled')
-    %lsline
+    figure
+    scatter(TerDiff1(:,k),TerDiff2(:,k),120,cmap1(3,:),'filled')
     xlim([min([TerDiff1(:);TerDiff2(:)]) max([TerDiff1(:);TerDiff2(:)])])
     ylim([min([TerDiff1(:);TerDiff2(:)]) max([TerDiff1(:);TerDiff2(:)])])
+    ax = gca;
+    ax.FontSize = 36;
     [ICc] = ICC([TerDiff1(:,k),TerDiff2(:,k)],'A-k',0.05);
     str = sprintf(' ICC = %1.2f',ICc); clear ICc
     rText = text(min(get(gca, 'xlim')), max(get(gca, 'ylim')), str);
-    set(rText,'fontweight','bold','fontsize',7.4,'verticalalignment','top','horizontalalignment','left');
+    set(rText,'fontweight','bold','fontsize',40,'verticalalignment','top','horizontalalignment','left');
     refline
     axis square
 end
-subplot(length(nTdrawn),5,1); title('CE RT','FontSize',8)
-subplot(length(nTdrawn),5,2); title('CE accuracy','FontSize',8)
-subplot(length(nTdrawn),5,3); title('Drift rate','FontSize',8)
-subplot(length(nTdrawn),5,4); title('Boundary separation','FontSize',8)
-subplot(length(nTdrawn),5,5); title('Nondecision time','FontSize',8)

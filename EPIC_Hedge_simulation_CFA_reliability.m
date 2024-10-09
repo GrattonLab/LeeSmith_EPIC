@@ -15,9 +15,8 @@
 % analysis (CFA) to examine how sampling size affects the reliability of
 % factor analysis
 %
-% What the script outputs: Supp. Fig. 13
-% Plot the test-retest reliability of
-% factor loadings, specific variance, and factor scores
+% What the script outputs: Supp. Fig. 21
+% Plot the test-retest reliability of factor scores
 %
 % Created on 04/26/2023 by HJ Lee
 % Last modified on 07/07/2023
@@ -352,8 +351,8 @@ for rI = 1:length(crossTaskcorr)
         simCErt_cell{k,1} = simCErt_mat;
         simCErt_cell2{k,1} = simCErt_mat2;
     end
-    save(['CFAsim_testretestResult_avg_corr' num2str(rI)],'simCErt_cell','simCErt_cell2', ...
-        'lambdaM','psiM','FM','lambdaM2','psiM2','FM2')
+    %save(['CFAsim_testretestResult_avg_corr' num2str(rI)],'simCErt_cell','simCErt_cell2', ...
+    %    'lambdaM','psiM','FM','lambdaM2','psiM2','FM2')
 end
 
 %% Plot
@@ -441,3 +440,5 @@ Ylabels = nCond*nTdrawn;
 h.YDisplayLabels = Ylabels;
 %h.Title = '';
 h.Colormap = jet;
+h.CellLabelFormat = '%.2f';
+h.FontSize = 12;

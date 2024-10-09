@@ -2,7 +2,7 @@
 % EPIC
 %
 % To run this script:
-% You need Hedge et al.'s (2018) flanker and Stroop task data 
+% You need Hedge et al.'s (2018) flanker task data 
 % (download at https://osf.io/cwzds/)
 % You also need ICC.m (download at
 % https://www.mathworks.com/matlabcentral/fileexchange/22099-intraclass-correlation-coefficient-icc)

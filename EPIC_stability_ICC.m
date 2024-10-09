@@ -2,44 +2,29 @@
 % EPIC
 % flanker, prime-probe, and Stroop tasks
 %
-% STABILITY CURVES from sampling only the first 40 trials repeatedly
-%
 % To run this script:
 % You need the EPIC dataset and "session_numbering.xlsx"
 % (download both at https://osf.io/jk9nb)
 %
 % What this script does:
-% Draws stability curves with method 2 (width of 95% confidence interval of
-% the mean congruency effect [CE]) for RT, accuracy, and IES data
-% Drops the INITIAL two blocks (for all measures: RT, Acc, & IES CE) and
-% regresses out practice effects with a linear model (for RT CE only)
-% STEPS:
-% 1. Break data up into 144 trial units (4blocks*2(in half)*18sessions)
-% 2. Add a unit (randomly choose one with replacement)
-% 3. Calculate the mean congruency effect (CE)
-% 4. Repeat steps 2-3 for 144 steps
-% 5. Repeat steps 2-4 5000 times and get the 95% CI of the 5000 scores
-% 6. Plot the width of the CI
-% n trials added on evey step(=144)
-% n = 50 trials for Flanker (con25 + inc25)
-% n = 48 trials for Prime-probe (con24 + inc24)
-% n = 36 trials for Stroop task (con18 + inc18)
+% Plots the stability curves (method 1) but instead of calculating the
+% absolute difference between the reference and test sets congruency effect
+% for each participant, it calculates the ICC across participants
 %
 % What this script outputs:
-% Supp. Fig. 10A, 10C CE RT with or without regressing practice effects
-% Supp. Fig. 12B CE accuracy
-% Supp. Fig. 13B CE IES
+% Supp. Fig. 15
 %
-% Created on 03/1/2024 by HJ Lee
-% Last modifed on 09/23/2024
+% Created on 08/28/2024 by HJ Lee
+% Last modified on 09/18/2024
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear all
 close all
 clc
 
 rng('shuffle')
+
 %% Parameter settings
-% Participant information
+% Subject information
 tmpSubjID = 1:12;
 subjExcld = [1,2,11,9];  % excluded participants
 subjID = setdiff(tmpSubjID, subjExcld);
@@ -47,27 +32,27 @@ nSubj = length(subjID);
 
 % Task information
 nTask = 4-1;  % 1: Flanker, 2: Prime-Probe, 3: Stroop
-taskIndx=[1,3,4];  % Three of the 4 tasks (1=FL, 3=PP, 4=ST) session_numbering.xlsx
+taskIndx = [1,3,4];  % Three of the four tasks (1=FL, 3=PP, 4=ST) session_numbering.xlsx
 taskStrng = {'Flanker','PrimeProbe','STROOP'};
 nSession = 18;  % People do it for 9 weeks and each task is used during two sessions each week
 nBlocks = 4;
 nBlocksT = nSession*nBlocks;  % 72
-bD = 2;  % block division; half the block
+bD = 2;  % break block into half
 nTrials = [100; 96; 108]./bD;  % half a block; this amount is added on each step
-nSteps = nBlocksT*bD;  % number of steps
-nCond = 2;  % congruent(1) vs. incongruent(2)
-UpB = 97.5;
-LwB = 2.5;
-numTest = 5000;  % number of repetition
+nSteps = (nBlocksT*bD)/2;  % number of steps; add half the block to the test set on every step
+%nCond = 2;  % congruent(1) vs. incongruent(2)
+UpB = 97.5;  % percentile; upper boundary of the confidence interval
+LwB = 2.5;  % lower boundary
+numTest = 100;  % number of repetition
 
 %% Load raw data and break them up by half the blocks
 % Preallocation
 % (1) RT - Store only the correctly responded RTs
-conMSrt = cell(nSteps,nTask,nSubj);  % 144
-incMSrt = cell(nSteps,nTask,nSubj);
+conMSrt = cell(nSteps*2,nTask,nSubj);  % 72*2
+incMSrt = cell(nSteps*2,nTask,nSubj);
 % (2) Acc
-conMSacc = cell(nSteps,nTask,nSubj);
-incMSacc = cell(nSteps,nTask,nSubj);
+conMSacc = cell(nSteps*2,nTask,nSubj);
+incMSacc = cell(nSteps*2,nTask,nSubj);
 for i = 1:nSubj
     for t = 1:nTask
         %% Load session indexing information
@@ -109,7 +94,6 @@ for i = 1:nSubj
                 end
                 T = table(matn0cong,double(cell2mat(allData(:,4))),double(cell2mat(allData(:,5))),'VariableNames',["n0cong","acc","rt"]);
             end
-
             %% Break up data
             T1 = T(1:nTrials(t),:);
             T2 = T(nTrials(t)+1:2*nTrials(t),:);
@@ -159,10 +143,10 @@ for i = 1:nSubj
 end
 
 %% Inverse Efficiency Scores (IES)
-conMSies = nan(nTask,nSteps,nSubj);
-incMSies = nan(nTask,nSteps,nSubj);
+conMSies = nan(nTask,nSteps*2,nSubj);
+incMSies = nan(nTask,nSteps*2,nSubj);
 for i = 1:nSubj
-    for s = 1:nSteps
+    for s = 1:nSteps*2
         conMSies(1,s,i) = mean(conMSrt{s,1,i})/mean(conMSacc{s,1,i});  % FL
         conMSies(2,s,i) = mean(conMSrt{s,2,i})/mean(conMSacc{s,2,i});  % PP
         conMSies(3,s,i) = mean(conMSrt{s,3,i})/mean(conMSacc{s,3,i});  % ST
@@ -174,21 +158,39 @@ end
 bCEmatIES = incMSies-conMSies;
 
 %% Mean CE before linear regression - RT
-bCEmatRT = nan(nTask,nSteps,nSubj);  % before (nSteps==144)
-bCEmatACC = nan(nTask,nSteps,nSubj);  % this will not be regressed; CE acc does not have practice effects
+bCEmatRT = nan(nTask,nSteps*2,nSubj);  % before (nSteps==72)
+bCEmatACC = nan(nTask,nSteps*2,nSubj);  % this will not be regressed; CE acc does not have practice effects
+bCmatRTmean = nan(nTask,nSteps*2,nSubj);
+bImatRTmean = nan(nTask,nSteps*2,nSubj);
+bCmatRTstd = nan(nTask,nSteps*2,nSubj);
+bImatRTstd = nan(nTask,nSteps*2,nSubj);
 for i = 1:nSubj
-    for s = 1:nSteps
+    for s = 1:nSteps*2
         bCEmatRT(1,s,i) = mean(incMSrt{s,1,i})-mean(conMSrt{s,1,i});
         bCEmatRT(2,s,i) = mean(incMSrt{s,2,i})-mean(conMSrt{s,2,i});
         bCEmatRT(3,s,i) = mean(incMSrt{s,3,i})-mean(conMSrt{s,3,i});
         bCEmatACC(1,s,i) = mean(conMSacc{s,1,i})-mean(incMSacc{s,1,i});
         bCEmatACC(2,s,i) = mean(conMSacc{s,2,i})-mean(incMSacc{s,2,i});
         bCEmatACC(3,s,i) = mean(conMSacc{s,3,i})-mean(incMSacc{s,3,i});
+
+        % To store parameter values
+        bCmatRTmean(1,s,i) = mean(conMSrt{s,1,i});
+        bCmatRTmean(2,s,i) = mean(conMSrt{s,2,i});
+        bCmatRTmean(3,s,i) = mean(conMSrt{s,3,i});
+        bCmatRTstd(1,s,i) = std(conMSrt{s,1,i});
+        bCmatRTstd(2,s,i) = std(conMSrt{s,2,i});
+        bCmatRTstd(3,s,i) = std(conMSrt{s,3,i});
+        bImatRTmean(1,s,i) = mean(incMSrt{s,1,i});
+        bImatRTmean(2,s,i) = mean(incMSrt{s,2,i});
+        bImatRTmean(3,s,i) = mean(incMSrt{s,3,i});
+        bImatRTstd(1,s,i) = std(incMSrt{s,1,i});
+        bImatRTstd(2,s,i) = std(incMSrt{s,2,i});
+        bImatRTstd(3,s,i) = std(incMSrt{s,3,i});
     end
 end
 
-%% Regress the practice effect - RT
-aCEmatRT = nan(nTask,nSteps,nSubj);  % after
+%% Regress the practice effects - RT
+aCEmatRT = nan(nTask,nSteps*2,nSubj);  % after
 for t = 1:nTask
     tempM = squeeze(bCEmatRT(t,:,:))';
     [r,c] = size(tempM);
@@ -215,23 +217,21 @@ aCEmatRT(:,rmvL,:) = [];  % rt; practice effect regressed
 bCEmatRT(:,rmvL,:) = [];  % rt; practice effect NOT regressed
 bCEmatACC(:,rmvL,:) = [];  % acc; practice effect NOT regressed
 bCEmatIES(:,rmvL,:) = [];  % ies; practice effect NOT regressed
-nSteps = nSteps-length(rmvL);  % update nSteps
+nSteps = nSteps-(length(rmvL))/2;  % update nSteps
 
 %% Matrix definition and preassignment
-conIntvl = nan(nTask,nSteps,nSubj);
-conIntvl_test = nan(nTask,nSteps,nSubj);  % for testing
-conNTi = nan(nTask,nSteps,nSubj);  % mean number of trials added; for testing and plotting
-incNTi = nan(nTask,nSteps,nSubj);
+conNTi = nan(nTask,nSteps);  % number of trials - congruent condition; for plotting
+incNTi = nan(nTask,nSteps);  % incongruent
 
-%% RT or Accuracy? Run this script FOUR times from this line; change rtAcc and practice
+%% RT or accuracy? Run this script FOUR times from this line; change rtAcc and practice
 rtAcc = 1;  % rt:1, acc:2, IES:3
 practice = 1;  % regressed:1 (only when rtAcc=1 and you want to regress out practice effect), no:0
 
 if rtAcc == 1
     if practice == 1
-        trialUnit = aCEmatRT;  % CE after LINEAR REGRESSION
+        trialUnit = aCEmatRT;  % LINEAR REGRESSION
     elseif practice == 0
-        trialUnit = bCEmatRT;  % if you don't want to regress out the practice effect
+        trialUnit = bCEmatRT;  % if you don't want to regress out practice effect
     end
 elseif rtAcc == 2
     trialUnit = bCEmatACC;
@@ -239,14 +239,48 @@ elseif rtAcc == 3
     trialUnit = bCEmatIES;
 end
 
-%% Bootstrapping
-for i = 1:nSubj
-    CEtmpMat = nan(numTest,nSteps,nTask);
-    CEtmpMat_test = nan(numTest,nSteps,nTask);  % for testing
-    conNT = nan(numTest,nSteps,nTask);  % for testing and plotting
-    incNT = nan(numTest,nSteps,nTask);  % for testing and plotting
-    for k = 1:numTest
-        % Make test set
+%% Calculate ICC
+myICC = nan(nSteps,numTest,nTask);
+AsignBase = [zeros(1,nSteps),ones(1,nSteps)];
+conNT = nan(numTest,nSteps,nTask);
+incNT = conNT;
+for k = 1:numTest
+    ICCbowl_r = nan(nSubj,nSteps,nTask);
+    ICCbowl_t = ICCbowl_r;
+    for i = 1:nSubj
+        %% Make reference set & test set: Trial unit assignment in random orders
+        % Randomize the trial units that are added for each step (Test Set)
+        % Flanker
+        blockreasign = randperm(nSteps*2); % scramble the order
+        Asigner = AsignBase(blockreasign);
+        RefFL = trialUnit(1,Asigner==0,i);  % reference set
+        TestFL_T = trialUnit(1,Asigner==1,i);  % test set
+        conRefFL = conMSrt(Asigner==0,1,i);  % for testing
+        incRefFL = incMSrt(Asigner==0,1,i);
+        conTestFL_T = conMSrt(Asigner==1,1,i);
+        incTestFL_T = incMSrt(Asigner==1,1,i);
+
+        % Prime-probe
+        blockreasign = randperm(nSteps*2);
+        Asigner = AsignBase(blockreasign);
+        RefPP = trialUnit(2,Asigner==0,i);
+        TestPP_T = trialUnit(2,Asigner==1,i);
+        conRefPP = conMSrt(Asigner==0,2,i);  % for testing
+        incRefPP = incMSrt(Asigner==0,2,i);
+        conTestPP_T = conMSrt(Asigner==1,2,i);
+        incTestPP_T = incMSrt(Asigner==1,2,i);
+
+        % Stroop
+        blockreasign = randperm(nSteps*2);
+        Asigner = AsignBase(blockreasign);
+        RefST = trialUnit(3,Asigner==0,i);
+        TestST_T = trialUnit(3,Asigner==1,i);
+        conRefST = conMSrt(Asigner==0,3,i);  % for testing
+        incRefST = incMSrt(Asigner==0,3,i);
+        conTestST_T = conMSrt(Asigner==1,3,i);
+        incTestST_T = incMSrt(Asigner==1,3,i);
+
+        % Make test set storage
         TestFL = [];
         TestPP = [];
         TestST = [];
@@ -257,125 +291,118 @@ for i = 1:nSubj
         TestConST = [];
         TestIncST = [];
 
-        testorder = datasample((1:nSteps),nSteps);  % randomize(w/replacement) order of adding a trial unit on each step
+        testorder = datasample(1:nSteps,nSteps);  % bootstrapping with replacement
         for s = 1:nSteps
-            TestFL = [TestFL; trialUnit(1,testorder(s),i)];
-            TestPP = [TestPP; trialUnit(2,testorder(s),i)];
-            TestST = [TestST; trialUnit(3,testorder(s),i)];
-            CEtmpMat(k,s,1) = mean(TestFL);
-            CEtmpMat(k,s,2) = mean(TestPP);
-            CEtmpMat(k,s,3) = mean(TestST);
-            TestConFL = [TestConFL; conMSrt{testorder(s),1,i}];  % for testing
-            TestIncFL = [TestIncFL; incMSrt{testorder(s),1,i}];
-            TestConPP = [TestConPP; conMSrt{testorder(s),2,i}];
-            TestIncPP = [TestIncPP; incMSrt{testorder(s),2,i}];
-            TestConST = [TestConST; conMSrt{testorder(s),3,i}];
-            TestIncST = [TestIncST; incMSrt{testorder(s),3,i}];
-            CEtmpMat_test(k,s,1) = mean(TestIncFL)-mean(TestConFL);  % for testing
-            CEtmpMat_test(k,s,2) = mean(TestIncPP)-mean(TestConPP);
-            CEtmpMat_test(k,s,3) = mean(TestIncST)-mean(TestConST);
-            conNT(k,s,1) = length(TestConFL);  % for testing and plotting
-            incNT(k,s,1) = length(TestIncFL);
-            conNT(k,s,2) = length(TestConPP);
-            incNT(k,s,2) = length(TestIncPP);
-            conNT(k,s,3) = length(TestConST);
-            incNT(k,s,3) = length(TestIncST);
+            %% Add block to test set on every step
+            TestFL = [TestFL; TestFL_T(testorder(s))];
+            TestPP = [TestPP; TestPP_T(testorder(s))];
+            TestST = [TestST; TestST_T(testorder(s))];
+            TestConFL = [TestConFL; conTestFL_T{testorder(s)}];  % for testing
+            TestIncFL = [TestIncFL; incTestFL_T{testorder(s)}];
+            TestConPP = [TestConPP; conTestPP_T{testorder(s)}];
+            TestIncPP = [TestIncPP; incTestPP_T{testorder(s)}];
+            TestConST = [TestConST; conTestST_T{testorder(s)}];
+            TestIncST = [TestIncST; incTestST_T{testorder(s)}];
+            %% Record data
+            ICCbowl_r(i,s,1) = mean(RefFL);  % should have the same data across steps
+            ICCbowl_t(i,s,1) = mean(TestFL);
+            ICCbowl_r(i,s,2) = mean(RefPP);
+            ICCbowl_t(i,s,2) = mean(TestPP);
+            ICCbowl_r(i,s,3) = mean(RefST);
+            ICCbowl_t(i,s,3) = mean(TestST);
+
+            if i == 1
+                conNT(k,s,1) = length(TestConFL);  % for testing and plotting
+                incNT(k,s,1) = length(TestIncFL);
+                conNT(k,s,2) = length(TestConPP);
+                incNT(k,s,2) = length(TestIncPP);
+                conNT(k,s,3) = length(TestConST);
+                incNT(k,s,3) = length(TestIncST);
+            end
         end
     end
-    % 95% Confidence Intervals of the simulated scores
-    conIntvl(1,:,i) = prctile(CEtmpMat(:,:,1),UpB)-prctile(CEtmpMat(:,:,1),LwB);
-    conIntvl(2,:,i) = prctile(CEtmpMat(:,:,2),UpB)-prctile(CEtmpMat(:,:,2),LwB);
-    conIntvl(3,:,i) = prctile(CEtmpMat(:,:,3),UpB)-prctile(CEtmpMat(:,:,3),LwB);
-    conIntvl_test(1,:,i) = prctile(CEtmpMat_test(:,:,1),UpB)-prctile(CEtmpMat_test(:,:,1),LwB);  % for testing
-    conIntvl_test(2,:,i) = prctile(CEtmpMat_test(:,:,2),UpB)-prctile(CEtmpMat_test(:,:,2),LwB);
-    conIntvl_test(3,:,i) = prctile(CEtmpMat_test(:,:,3),UpB)-prctile(CEtmpMat_test(:,:,3),LwB);
-    conNTi(1,:,i) = mean(conNT(:,:,1));  % for testing and plotting
-    incNTi(1,:,i) = mean(incNT(:,:,1));
-    conNTi(2,:,i) = mean(conNT(:,:,2));
-    incNTi(2,:,i) = mean(incNT(:,:,2));
-    conNTi(3,:,i) = mean(conNT(:,:,3));
-    incNTi(3,:,i) = mean(incNT(:,:,3));
+    for s = 1:nSteps
+        myICC(s,k,1) = ICC([ICCbowl_r(:,s,1),ICCbowl_t(:,s,1)],'C-1',0.05);  % fl
+        myICC(s,k,2) = ICC([ICCbowl_r(:,s,2),ICCbowl_t(:,s,2)],'C-1',0.05);  % pp
+        myICC(s,k,3) = ICC([ICCbowl_r(:,s,3),ICCbowl_t(:,s,3)],'C-1',0.05);  % st
+    end
 end
+% Average
+plot_myICC = squeeze(mean(myICC,2));
+% 95% confidence interval
+plot_myICC_ci = squeeze((prctile(myICC,UpB,2)-prctile(myICC,LwB,2))/2);
+CIl = plot_myICC-plot_myICC_ci;
+CIu = plot_myICC+plot_myICC_ci;
 
-% if and(rtAcc==1,practice==1)
-%     conIntvl_1_1 = conIntvl;
-%     save('RTstabilityCurveVariables2_initial_practice','conIntvl_1_1','conNTi','incNTi')
-% elseif and(rtAcc==1,practice==0)
-%     conIntvl_1_2 = conIntvl;
-%     save('RTstabilityCurveVariables2_initial','conIntvl_1_2','conNTi','incNTi')
-% elseif rtAcc==2
-%     conIntvl_2 = conIntvl;
-%     save('ACCstabilityCurveVariables2_initial','conIntvl_2','conNTi','incNTi')
-% elseif rtAcc==3
-%     conIntvl_3 = conIntvl;
-%     save('IESstabilityCurveVariables2_initial','conIntvl_3','conNTi','incNTi')
-% end
+% Trial number
+conNTi(1,:) = mean(conNT(:,:,1));
+incNTi(1,:) = mean(incNT(:,:,1));
+conNTi(2,:) = mean(conNT(:,:,2));
+incNTi(2,:) = mean(incNT(:,:,2));
+conNTi(3,:) = mean(conNT(:,:,3));
+incNTi(3,:) = mean(incNT(:,:,3));
 
-% if and(rtAcc==1,practice==1)
-%     load RTstabilityCurveVariables2_initial_practice
-%     conIntvl = conIntvl_1_1;
-% elseif and(rtAcc==1,practice==0)
-%     load RTstabilityCurveVariables2_initial
-%     conIntvl = conIntvl_1_2;
-% elseif rtAcc==2
-%     load ACCstabilityCurveVariables2_initial
-%     conIntvl = conIntvl_2;
-% elseif rtAcc==3
-%     load IESstabilityCurveVariables2_initial
-%     conIntvl = conIntvl_3;
-% end
-
-%% Plot the results
-% Stability curve
-cmap = turbo(nSubj);
+%% Plot results
 taskStrngfx = {'Flanker','Prime-Probe','Stroop'};
-stp = 140;  % 144-4; nSteps
-nihTB = 40;  % number of trials of NIH toolbox flanker task
-Ebg = 96;  % number of trials of Eisenberg et al.'s (2019) Stroop task
-for t = 1:nTask
-    figure
-    for i = 1:nSubj
-        x = conNTi(t,1:stp,i)+incNTi(t,1:stp,i);  % # of trials of the test set sample
-        h = plot(x,conIntvl(t,1:stp,i),'Color',cmap(i,:),'LineWidth',2); hold on
-        set(get(h,'Parent'),'XScale','log')
-    end
-    set(gca,'FontSize',14.6)
-    xlabel('Number of trials','FontSize',18)
-    xlim([0 8000])  % 18session*400trials = 7200
-    if rtAcc == 1
-        ylabel('Width of 95% confidence interval (ms)','FontSize',17.4)
-        if t == 1
-            ylim([0 110])
-        elseif t == 2
-            ylim([0 150])
-        elseif t == 3
-            ylim([0 250])
-        end
-    elseif rtAcc == 2
-        ylabel('Width of 95% confidence interval','FontSize',17.4)
-        ylim([0 0.35]);
-    elseif rtAcc == 3
-        ylabel('Width of 95% confidence interval','FontSize',17.4)
-        if t == 1
-            ylim([0 200])
-        elseif t == 2
-            ylim([0 300])
-        elseif t == 3
-            ylim([0 400])
-        end
-    end
-    xticks([50 100 200 400 800 1600 3200 6400])
-    title([taskStrngfx{t} ' Task'],'FontSize',22)
-    if x(1) < nihTB
-        xline(nihTB,'k','LineWidth',2,'LineStyle','--')
-    else
-        xline(x(1),'k','LineWidth',2,'LineStyle','--')
-    end
-    xline(Ebg,'k','LineWidth',2,'LineStyle','-.')
-    grid on
-    %if t == 1
-    %    legend('Participant 03','Participant 04','Participant 05','Participant 06',...
-    %        'Participant 07','Participant 08','Participant 10','Participant 12',....
-    %        'NIH toolbox','Eisenberg et al.','FontSize',13)
-    %end
-end
+stp = nSteps;
+% flanker task
+figure
+x = conNTi(1,1:stp)+incNTi(1,1:stp);
+% confidence interval
+xconf = [x x(end:-1:1)];
+u = CIu(:,1);
+yconf = [CIl(:,1); u(end:-1:1)]';
+p = fill(xconf,yconf,'k'); hold on
+p.FaceColor = [0.8 0.8 0.8];
+p.EdgeColor = 'none';
+% mean
+h1 = plot(x,plot_myICC(:,1)','Color','k','LineWidth',5);
+set(get(h1,'Parent'),'XScale','log')  % log-scale
+set(gca,'FontSize',24)
+xlabel('Number of trials','FontSize',28)
+xlim([50 4000])
+%ylabel('ICC','FontSize',28)
+ylim([0 1.1])
+xticks([0 50 100 200 400 800 1600 3200])
+grid on
+
+% prime-probe task
+figure
+x = conNTi(2,1:stp)+incNTi(2,1:stp);
+% confidence interval
+xconf = [x x(end:-1:1)];
+u = CIu(:,2);
+yconf = [CIl(:,2); u(end:-1:1)]';
+p = fill(xconf,yconf,'r'); hold on
+p.FaceColor = [1 0.8 0.8];
+p.EdgeColor = 'none';
+% mean
+h2 = plot(x,plot_myICC(:,2)','Color','r','LineWidth',5);
+set(get(h2,'Parent'),'XScale','log')  % log-scale
+set(gca,'FontSize',24)
+xlabel('Number of trials','FontSize',28)
+xlim([50 4000])
+%ylabel('ICC','FontSize',28)
+ylim([0 1.1])
+xticks([0 50 100 200 400 800 1600 3200])
+grid on
+
+% Stroop task
+figure
+x = conNTi(3,1:stp)+incNTi(3,1:stp);
+% confidence interval
+xconf = [x x(end:-1:1)];
+u = CIu(:,3);
+yconf = [CIl(:,3); u(end:-1:1)]';
+p = fill(xconf,yconf,'b'); hold on
+p.FaceColor = [0.8 0.8 1];
+p.EdgeColor = 'none';
+h3 = plot(x,plot_myICC(:,3)','Color','b','LineWidth',5);
+set(get(h3,'Parent'),'XScale','log')  % log-scale
+set(gca,'FontSize',24)
+xlabel('Number of trials','FontSize',28)
+xlim([50 4000])
+%ylabel('ICC','FontSize',28)
+ylim([0 1.1])
+xticks([0 50 100 200 400 800 1600 3200])
+grid on

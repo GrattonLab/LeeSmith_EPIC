@@ -6,10 +6,10 @@
 % https://osf.io/6hjwv/)
 %
 % What this script does:
-% Simulates the within-subject distributions of Robinson and Steyvers'
-% (2023) 185 participants (>= 2500 trials) with Pearson system and examines
-% how repeated measures affect within and between-subject variance by
-% sampling small/large number of trials from the distributions
+% Simulates within-subject distributions of Robinson and Steyvers' (2023)
+% 185 participants (>= 2500 trials) with Pearson system and examines how
+% repeated measures affect within- and between-subject variance by
+% sampling small or large number of trials from the distributions
 %
 % What this script outputs:
 % Figure 5. Comparison of model 1 (large within-subject variance) 
@@ -21,23 +21,22 @@
 clear all
 close all
 clc
+
 rng('shuffle')
 
 %% Load Robinson and Steyvers' (2023) flanker task data
 load FlankerData_learn
 
 %% Parameter settings
+nCond = 2;  % congruent(1), incongruent(2)
+UpB = 97.5;  % 95% confidence interval
+LwB = 2.5;
+numTest = 1000;
 tmpnSubj = length(d_flanker_tab);  % 495
 nTrialMat = nan(tmpnSubj,1);
 for i = 1:tmpnSubj
     nTrialMat(i) = size(d_flanker_tab{i,1},1);
 end
-
-%% Draw histogram for number of trials
-% figure
-% histogram(nTrialMat)
-% xlabel('Number of Trials')
-% title(['Robinson & Steyvers'' (2023) Flanker Task Data (n=' num2str(tmpnSubj) ')'])
 
 %% 1. Preprocess data
 % Matrix definition and preassignment
@@ -125,10 +124,6 @@ RTdistC = tCrt(sGrpID);
 RTdistI = tIrt(sGrpID);
 
 % Within-subject and between-subject variability
-UpB = 97.5;  % 95% CI
-LwB = 2.5;
-nCond = 2;  % congruent(1), incongruent(2)
-numTest = 1000;
 tCEmat = nan(l_sGrp,1);
 tmeanmat = nan(l_sGrp,nCond);  % mean congruent, incongruent separately
 twsSE = nan(l_sGrp,1);  % within-subject variability: 95% CI
@@ -153,7 +148,7 @@ tbsSD = std(tCEmat);  % between-subject variability: bs SD
 %% 2. Simulate data
 % Generate data using the Pearson system (https://www.mathworks.com/help/stats/pearsrnd.html)
 % Parameter settings
-nTu = [40 80 160 320 640 1000 2000 4000 8000 16000]./2;  % number of trials sampled from distribution
+nTu = [40 80 160 320 640 1000 2000 4000 8000 16000]./nCond;  % number of trials sampled from distribution
 nSteps = length(nTu);
 
 % Preassignment
@@ -197,6 +192,8 @@ bsSDtmp = squeeze(std(simCEmat));
 bsSDmean = mean(bsSDtmp);
 
 %% Plot data - This one for the manusciprt
+trueEstimate = 28.5;  % Get this value from the script 'EPIC_Robinson_correctingBSsd'
+
 nCase = 2;  % large / small within-subject variance
 cRg = cell(2,1);
 cRg{1} = 1:5;
@@ -206,22 +203,24 @@ for mycase = 1:nCase
     figure
     % Within-subject variance
     subplot(2,1,1)  % width of 95% CI
-    x = 2*nTu(cRg{mycase});
+    x = nCond*nTu(cRg{mycase});
     for i = 1:plotnSubj
         h = plot(x,conIntvl(i,cRg{mycase}),'LineWidth',1,'Color',[0.5 0.5 0.5]); hold on
     end
-    h2 = plot(x,median(conIntvl(:,cRg{mycase})),'Color','r','LineWidth',1.4);  % median or mean
+    h2 = plot(x,median(conIntvl(:,cRg{mycase})),'Color','r','LineWidth',2);  % median or mean
+    set(gca,'FontSize',14)  % default is 10
     set(get(h2,'Parent'),'XScale','log')
-    set(gca,'FontSize',12)  % default is 10
-    xlabel('Number of trials','FontSize',14)
+    xlabel('Number of trials','FontSize',15)
     xticks(x)
     xlim([x(1) x(end)])
     ylim([0 500])
-    ylabel('Width of 95% CI (ms)','FontSize',14)
+    ylabel({'Width of 95%'; 'confidence interval (ms)'},'FontSize',15)
     grid on
-    title('Within-Subject Variability','FontSize',15)
-    if mycase == 2
-        legend('1 simulated subject','Group median','FontSize',13)
+    if mycase == 1
+        title('A) Within-Subject Variability','FontSize',19)
+    elseif mycase == 2
+        title('C) Within-Subject Variability','FontSize',19)
+        legend('1 simulated subject','Group median','FontSize',14)
     end
 
     % Between-subject variance
@@ -235,23 +234,26 @@ for mycase = 1:nCase
     p.FaceColor = [0.8 0.8 1];
     p.EdgeColor = 'none';
     hold on
-    p2 = plot(x,bsSDmean(cRg{mycase}),'Color','b','LineWidth',1.4);
+    p2 = plot(x,bsSDmean(cRg{mycase}),'Color','b','LineWidth',2);
+    set(gca,'FontSize',14)
     set(get(p2,'Parent'),'XScale','log')
-    set(gca,'FontSize',12)
-    xlabel('Number of trials','FontSize',14)
+    xlabel('Number of trials','FontSize',15)
     xticks(x)
     xlim([x(1) x(end)])
-    ylim([20 80])
-    ylabel('Between-subject SD (ms)','FontSize',14)
+    ylim([20 70])  % [20 80]
+    ylabel({'Between-subject'; 'standard deviation (ms)'},'FontSize',15)
+    %yline(trueEstimate,'--m','LineWidth',2)
     grid on
-    title('Between-Subject Variability','FontSize',15)
-    if mycase == 2
-        legend('Width of 95% CI','Between-subject SD','FontSize',13)
-    end
-
     if mycase == 1
-        sgtitle('Model 1: Small Trial Sampling','FontSize',19)
+        title('B) Between-Subject Variability','FontSize',19)
     elseif mycase == 2
-        sgtitle('Model 2: Large Trial Sampling','FontSize',19)
+        title('D) Between-Subject Variability','FontSize',19)
+        legend('95% confidence interval','FontSize',14)
+        %legend('95% confidence interval','','True estimate','FontSize',14)
     end
+%     if mycase == 1
+%         sgtitle('Model 1: Small Trial Sampling','FontSize',19)
+%     elseif mycase == 2
+%         sgtitle('Model 2: Large Trial Sampling','FontSize',19)
+%     end
 end

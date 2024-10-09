@@ -26,14 +26,15 @@
 % 7. Plot the data
 %
 % What this script outputs:
-% A figure showing before and after linear regression (practice effects)
 % Fig. 3 CE RT
-% Supp. Fig. 8-1 CE RT without regressing practice effect
-% Supp. Fig. 9-1 CE accuracy
-% Supp. Fig. 10-1 CE IES
+% Supp. Fig. 10B CE RT with practice effects
+% Supp. Fig. 11 Percentage to grand mean
+% Supp. Fig. 12A CE accuracy
+% Supp. Fig. 13A CE IES
+% Supp. Fig. 17 Before and after linear regression
 %
 % Created on 10/19/2022 by HJ Lee
-% Last modified on 06/30/2023
+% Last modified on 09/23/2024
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear all
 close all
@@ -49,7 +50,7 @@ nSubj = length(subjID);
 
 % Task information
 nTask = 4-1;  % 1: Flanker, 2: Prime-Probe, 3: Stroop
-taskIndx=[1,3,4];  % Three of the 4 tasks (1=FL, 3=PP, 4=ST) session_numbering.xlsx
+taskIndx = [1,3,4];  % Three of the four tasks (1=FL, 3=PP, 4=ST) session_numbering.xlsx
 taskStrng = {'Flanker','PrimeProbe','STROOP'};
 nSession = 18;  % People do it for 9 weeks and each task is used during two sessions each week
 nBlocks = 4;
@@ -57,10 +58,10 @@ nBlocksT = nSession*nBlocks;  % 72
 bD = 2;  % break block into half
 nTrials = [100; 96; 108]./bD;  % half a block; this amount is added on each step
 nSteps = (nBlocksT*bD)/2;  % number of steps; add half the block to the test set on every step
-numTest = 5000;  % number of repetition
 nCond = 2;  % congruent(1) vs. incongruent(2)
 UpB = 97.5;  % percentile; upper boundary of the confidence interval
 LwB = 2.5;  % lower boundary
+numTest = 5000;  % number of repetition
 
 %% Load raw data and break them up by half the blocks
 % Preallocation
@@ -206,7 +207,7 @@ for i = 1:nSubj
     end
 end
 
-%% Regress the practice effect - RT
+%% Regress the practice effects - RT
 aCEmatRT = nan(nTask,nSteps*2,nSubj);  % after
 for t = 1:nTask
     tempM = squeeze(bCEmatRT(t,:,:))';
@@ -224,7 +225,7 @@ for t = 1:nTask
     aCEmatRT(t,:,:) = regM';
 end
 
-%% Plot the mean CE (after linear regression)
+%% Plot the mean CE (after linear regression) (Supp.Fig.17)
 cmap = turbo(nSubj);
 for t = 1:nTask
     figure
@@ -266,7 +267,7 @@ aProgLB = nan(nTask,nSteps,nSubj);
 conNTi = nan(nTask,nSteps,nSubj);  % number of trials - congruent condition; for testing and plotting
 incNTi = nan(nTask,nSteps,nSubj);  % incongruent
 
-%% RT or Accuracy? Run this script FOUR times from this line; change rtAcc and practice
+%% RT or accuracy? Run this script FOUR times from this line; change rtAcc and practice
 rtAcc = 1;  % rt:1, acc:2, IES:3
 practice = 1;  % regressed:1 (only when rtAcc=1 and you want to regress out practice effect), no:0
 
@@ -282,17 +283,17 @@ elseif rtAcc == 3
     trialUnit = bCEmatIES;
 end
 %% Bootstrapping
-AsignBase=[zeros(1,nSteps),ones(1,nSteps)];  % Os for the reference and 1s for the test set
+AsignBase = [zeros(1,nSteps),ones(1,nSteps)];  % 0s for the reference and 1s for the test set
 for i = 1:nSubj
     absdiffvec = nan(numTest,nSteps,nTask);
     absdiffvec_test = nan(numTest,nSteps,nTask);  % for testing
     conNT = nan(numTest,nSteps,nTask);  % for testing and plotting
     incNT = nan(numTest,nSteps,nTask);  % for testing and plotting
     for k = 1:numTest
-        %% Make reference set & test set: Block assignment in random orders
-        %Randomize the block that is added for each step (Test Set)%
+        %% Make reference set & test set: Trial unit assignment in random orders
+        % Randomize the trial units that are added for each step (Test Set)
         % Flanker
-        blockreasign = randperm(nSteps*2); % scramble the block order
+        blockreasign = randperm(nSteps*2); % scramble the order
         Asigner = AsignBase(blockreasign);
         RefFL = trialUnit(1,Asigner==0,i);  % reference set
         TestFL_T = trialUnit(1,Asigner==1,i);  % test set
@@ -421,13 +422,14 @@ for t = 1:nTask
     figure
     for i = 1:nSubj
         x = conNTi(t,1:stp,i)+incNTi(t,1:stp,i);  % # of trials of the test set sample
-        h = plot(x,aProgMean(t,1:stp,i),'Color',cmap(i,:),'LineWidth',1.2); hold on
+        h = plot(x,aProgMean(t,1:stp,i),'Color',cmap(i,:),'LineWidth',2); hold on
         set(get(h,'Parent'),'XScale','log')  % log-scale
     end
-    xlabel('Number of trials','FontSize',14)
+    set(gca,'FontSize',16)
+    xlabel('Number of trials','FontSize',18)
     xlim([0 4000])  % 18session*200trials = 3600
     if rtAcc == 1
-        ylabel('Absolute difference from test half (ms)','FontSize',14)
+        ylabel('Absolute difference from test half (ms)','FontSize',17.5)
         if t == 1
             ylim([0 25]);
         elseif t == 2
@@ -436,10 +438,10 @@ for t = 1:nTask
             ylim([0 55]);
         end
     elseif rtAcc == 2
-        ylabel('Absolute difference from test half','FontSize',14)
+        ylabel('Absolute difference from test half','FontSize',17.5)
         ylim([0 0.08]);
     elseif rtAcc == 3
-        ylabel('Absolute difference from test half','FontSize',14)
+        ylabel('Absolute difference from test half','FontSize',17.5)
         if t == 1
             ylim([0 40]);
         elseif t == 2
@@ -449,17 +451,48 @@ for t = 1:nTask
         end
     end
     xticks([0 50 100 200 400 800 1600 3200])
-    title([taskStrngfx{t} ' Task'],'FontSize',15)
+    title([taskStrngfx{t} ' Task'],'FontSize',22)
     if x(1) < nihTB
-        xline(nihTB,'k','LineWidth',0.7,'LineStyle','--')
+        xline(nihTB,'k','LineWidth',2,'LineStyle','--')
     else
-        xline(x(1),'k','LineWidth',0.7,'LineStyle','--')
+        xline(x(1),'k','LineWidth',2,'LineStyle','--')
     end
-    xline(Ebg,'k','LineWidth',0.7,'LineStyle','-.')
-    if t == 1
-        legend('Participant 03','Participant 04','Participant 05','Participant 06',...
-            'Participant 07','Participant 08','Participant 10','Participant 12',...
-            'NIH toolbox','Eisenberg et al.','FontSize',12)
-    end
+    xline(Ebg,'k','LineWidth',2,'LineStyle','-.')
     grid on
+    %if t == 1
+    %    legend('Participant 03','Participant 04','Participant 05','Participant 06',...
+    %        'Participant 07','Participant 08','Participant 10','Participant 12',...
+    %        'NIH toolbox','Eisenberg et al.','FontSize',13)
+    %end
+end
+
+%% Also plot the percentage relative to the grand mean (Supp.Fig.11)
+load FL_CEmat.mat
+load PP_CEmat.mat
+load ST_CEmat.mat
+for t = 1:nTask
+    if t == 1
+        gm = FL_CErtGrandMean;
+    elseif t == 2
+        gm = PP_CErtGrandMean;
+    elseif t == 3
+        gm = ST_CErtGrandMean;
+    end
+    figure
+    for i = 1:nSubj
+        y = aProgMean(t,1:stp,i)./gm(i);
+        y = y*100;
+        x = conNTi(t,1:stp,i)+incNTi(t,1:stp,i);  % # of trials of the test set sample
+        h = plot(x,y,'Color',cmap(i,:),'LineWidth',2); hold on
+        set(get(h,'Parent'),'XScale','log')
+    end
+    set(gca,'FontSize',14.6)
+    xlabel('Number of trials','FontSize',18)
+    xlim([0 4000])  % 18session*400trials = 7200
+    %ylabel('Percentage relative to grand mean','FontSize',17.4)
+    %ylim([0 100])  % can exceed 100%
+    xticks([50 100 200 400 800 1600 3200])
+    title([taskStrngfx{t} ' Task'],'FontSize',22)
+    grid on
+    %yline(20,'k--','20%','LineWidth',4,'FontSize',14)
 end

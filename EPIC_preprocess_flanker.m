@@ -3,7 +3,7 @@
 % 1. Flanker task
 %
 % To run this script:
-% You need the EPIC dataset and "session_numbering.xlsx"
+% You need the EPIC data and "session_numbering.xlsx"
 % (download both at https://osf.io/jk9nb)
 %
 % What this script does:
@@ -15,13 +15,14 @@
 % DV 3: Inverse Efficiency Score (IES)
 % 
 % What this script outputs:
-% This script calculates the grand mean of all sessions and its 95% CI
-% and outputs a mat-file to use it in EPIC_violinPlotGrandmeanPlot.m 
-% The script calculates RT mean, RT variance, accuracy mean across sessions
-% and outputs an excel file.
+% This script calculates the grand mean across all sessions and its 95%
+% confidence interval (CI).
+% It outputs a .mat file for use in EPIC_violinPlotGrandmeanPlot.m 
+% The script calculates the mean and variance of reaction time and accuracy
+% and outputs the results to an Excel file.
 %
 % Created on 10/02/2022 by HJ Lee
-% Last modified on 06/29/2023
+% Last modified on 02/23/2024
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear all
 close all
@@ -44,7 +45,6 @@ nBlocks = 4;
 numTrials = 100;  % per block
 nTrials = nBlocks*numTrials;  % total number of trials
 nSession = 18;  % total number of sessions for each task
-sessID = 1:nSession;
 nCond = 2;  % congruent(1) vs. incongruent(2)
 nStd = 3;  % outlier criterion; 3 standard deviation from mean
 
@@ -80,7 +80,7 @@ for i = 1:nSubj
     sessionID = tmpMat(:,taskIndx);
 
     %% Organizing session length
-    sessionID = sessionID(1:18);  % throws away excessive session for EPIC 10
+    sessionID = sessionID(1:nSession);  % throws away excessive session for EPIC 10
 
     % for each session
     nRemovedT = nan(1,nSession);
@@ -128,8 +128,8 @@ for i = 1:nSubj
 
         % (2) Remove outlier trials
         % (2)-1 Set outlier criteria
-        TGM = varfun(@mean,T_rm,'GroupingVariables',{'n0cong'},'OutputFormat','table');
-        TGS = varfun(@std,T_rm,'GroupingVariables',{'n0cong'},'OutputFormat','table');
+        TGM = varfun(@mean,T_rm,'GroupingVariables',{'n0cong'},'OutputFormat','table');  % mean
+        TGS = varfun(@std,T_rm,'GroupingVariables',{'n0cong'},'OutputFormat','table');  % standard deviation
         inbound = TGM.mean_rt-(TGS.std_rt*nStd);  % lower bound
         for i_inbound = 1:size(inbound,1)
             if inbound(i_inbound) < 0
@@ -160,7 +160,8 @@ for i = 1:nSubj
         TGVrt = varfun(@var,T_rm(T_rm.acc==1,:),'GroupingVariables',{'n0cong'},'OutputFormat','table');
         sess_list.var = TGVrt.var_rt;
         % 3) Accuracy mean
-        TGM_total = varfun(@mean,T(T.acc~=99,:),'GroupingVariables',{'n0cong'},'OutputFormat','table');
+        %TGM_total = varfun(@mean,T(T.acc~=99,:),'GroupingVariables',{'n0cong'},'OutputFormat','table');
+        TGM_total = varfun(@mean,T,'GroupingVariables',{'n0cong'},'OutputFormat','table');
         TGM_corr = varfun(@mean,T(T.acc==1,:),'GroupingVariables',{'n0cong'},'OutputFormat','table');
         sess_list.acc = TGM_corr.GroupCount./TGM_total.GroupCount;
 
@@ -189,7 +190,7 @@ for i = 1:nSubj
 
     %% Export to Excel
     savename = ['outputs/' taskStrng '_subj' num2str(subjID(i)) '_sess.xlsx'];
-    writetable(Wdata, savename)
+    %writetable(Wdata, savename)
 end
 % 18 session means - for violin plots
 CErtMat = squeeze(rtMat(2,:,:)-rtMat(1,:,:));  % inc-con
@@ -206,6 +207,8 @@ disp([num2str(100*tmpNR/(nTrials*nSubj*nSession)) '% of participants removed for
 
 %% Grand Mean and 95% Confidence Intervals
 % RT
+rtGM = nan(nSubj,1);  % overall grand mean
+rtCH = nan(nSubj,1);  % overal confidence interval/half length
 CErtGM = nan(nSubj,1);  % grand mean
 CErtCH = nan(nSubj,1);  % confidence interval/half length
 CrtGM = nan(nSubj,1);  % congruent
@@ -214,13 +217,16 @@ CrtCH = nan(nSubj,1);
 IrtCH = nan(nSubj,1);
 fxdC = cell(nSubj,1);  % RTs after excluding outliers
 fxdI = cell(nSubj,1);
+fxdA = cell(nSubj,1);  % all trials RT regardless of trial conditions
 for i = 1:nSubj
     % Remove outliers for RT data
     tmpC = [];
     tmpI = [];
+    tmpA = [];
     for s = 1:nSession
         tmpC = [tmpC; cRTdist{1,s,i}];
         tmpI = [tmpI; cRTdist{2,s,i}];
+        tmpA = [tmpA; cRTdist{1,s,i}; cRTdist{2,s,i}];
     end
     if isnan(tmpC)
         disp('NaN exists in tmpC')
@@ -229,14 +235,20 @@ for i = 1:nSubj
     end
     tmpCgm = mean(tmpC,'omitnan');
     tmpIgm = mean(tmpI,'omitnan');
+    tmpAgm = mean(tmpA,'omitnan');
     tmpCsd = std(tmpC,'omitnan');
     tmpIsd = std(tmpI,'omitnan');
+    tmpAsd = std(tmpA,'omitnan');
     lbound(1) = tmpCgm-nStd*tmpCsd;
     ubound(1) = tmpCgm+nStd*tmpCsd;
     lbound(2) = tmpIgm-nStd*tmpIsd;
     ubound(2) = tmpIgm+nStd*tmpIsd;
+    lbound(3) = tmpAgm-nStd*tmpAsd;
+    ubound(3) = tmpAgm+nStd*tmpAsd;
     fxdC{i} = tmpC(find(and(tmpC>=lbound(1),tmpC<=ubound(1))));
     fxdI{i} = tmpI(find(and(tmpI>=lbound(2),tmpI<=ubound(2))));
+    fxdA{i} = tmpA(find(and(tmpA>=lbound(3),tmpA<=ubound(3))));
+    rtGM(i) = 1000*mean(fxdA{i},'omitnan');
     CErtGM(i) = 1000*(mean(fxdI{i},'omitnan')-mean(fxdC{i},'omitnan'));  % convert to msec
     CrtGM(i) = 1000*mean(fxdC{i},'omitnan');
     IrtGM(i) = 1000*mean(fxdI{i},'omitnan');
@@ -245,37 +257,52 @@ for i = 1:nSubj
     simCE = [];
     simC = [];
     simI = [];
+    simA = [];
     for si = 1:nSim
         simCon = datasample(fxdC{i},length(fxdC{i}));  % use tmpC if you don't want to remove outliers
         simInc = datasample(fxdI{i},length(fxdI{i}));
+        simAll = datasample(fxdA{i},length(fxdA{i}));
         simCE = [simCE, mean(simInc)-mean(simCon)];
         simC = [simC, mean(simCon)];
         simI = [simI, mean(simInc)];
+        simA = [simA, mean(simAll)];
     end
+    rtCH(i) = 1000*(prctile(simA,UpB)-prctile(simA,LwB))/2;
     CErtCH(i) = 1000*(prctile(simCE,UpB)-prctile(simCE,LwB))/2;
     CrtCH(i) = 1000*(prctile(simC,UpB)-prctile(simC,LwB))/2;
     IrtCH(i) = 1000*(prctile(simI,UpB)-prctile(simI,LwB))/2;
 end
 
 % Acc
+accGM = nan(nSubj,1);  % overall grand mean
+accCH = nan(nSubj,1);  % overall confidence interval/half length
 CEaccGM = nan(nSubj,1);  % grand mean
 CEaccCH = nan(nSubj,1);  % confidence interval/half length
 CaccGM = nan(nSubj,1);  % congruent
 IaccGM = nan(nSubj,1);  % incongruent
 CaccCH = nan(nSubj,1);
 IaccCH = nan(nSubj,1);
+fxdaccC = cell(nSubj,1);
+fxdaccI = cell(nSubj,1);
+fxdaccA = cell(nSubj,1);
 for i = 1:nSubj
     cAcc = [];
     iAcc = [];
+    aAcc = [];
     for s = 1:nSession
         cAcc = [cAcc; accdist{1,s,i}];
         iAcc = [iAcc; accdist{2,s,i}];
+        aAcc = [aAcc; accdist{1,s,i}; accdist{2,s,i}];
     end
     if isnan(cAcc)
         disp('NaN exists in cAcc')
     elseif isnan(iAcc)
         disp('NaN exists in iAcc')
     end
+    fxdaccC{i} = cAcc;
+    fxdaccI{i} = iAcc;
+    fxdaccA{i} = aAcc;
+    accGM(i) = mean(aAcc);
     CEaccGM(i) = mean(cAcc)-mean(iAcc);
     CaccGM(i) = mean(cAcc);
     IaccGM(i) = mean(iAcc);
@@ -284,46 +311,66 @@ for i = 1:nSubj
     simCE = [];
     simC = [];
     simI = [];
+    simA = [];
     for si = 1:nSim
         simCon = datasample(cAcc,length(cAcc));
         simInc = datasample(iAcc,length(iAcc));
+        simAll = datasample(aAcc,length(aAcc));
         simCE = [simCE, (mean(simCon)-mean(simInc))];
         simC = [simC, mean(simCon)];
         simI = [simI, mean(simInc)];
+        simA = [simA, mean(simAll)];
     end
+    accCH(i) = (prctile(simA,UpB)-prctile(simA,LwB))/2;
     CEaccCH(i) = (prctile(simCE,UpB)-prctile(simCE,LwB))/2;
     CaccCH(i) = (prctile(simC,UpB)-prctile(simC,LwB))/2;
     IaccCH(i) = (prctile(simI,UpB)-prctile(simI,LwB))/2;
 end
 
 % IES
+iesGM = rtGM./accGM;  % overall grand mean
+iesCH = nan(nSubj,1);  % overall confidence interval/half length
 CiesGM = CrtGM./CaccGM;  % grand mean
 IiesGM = IrtGM./IaccGM;
 CEiesGM = IiesGM-CiesGM;
 CEiesCH = nan(nSubj,1);  % confidence interval/half length
 CiesCH = nan(nSubj,1);
 IiesCH = nan(nSubj,1);
+% 95% confidence interval by bootstrapping
 for i = 1:nSubj
     simCE = [];
     simC = [];
     simI = [];
+    simA = [];
     for si = 1:nSim
         simConRT = datasample(fxdC{i},length(fxdC{i}));  % tmpC
         simIncRT = datasample(fxdI{i},length(fxdI{i}));
-        simConACC = datasample(cAcc,length(cAcc));
-        simIncACC = datasample(iAcc,length(iAcc));
+        simRT = datasample(fxdA{i},length(fxdA{i}));
+        simConACC = datasample(fxdaccC{i},length(fxdaccC{i}));
+        simIncACC = datasample(fxdaccI{i},length(fxdaccI{i}));
+        simACC = datasample(fxdaccA{i},length(fxdaccA{i}));
         simConIES = 1000*mean(simConRT)/mean(simConACC);
         simIncIES = 1000*mean(simIncRT)/mean(simIncACC);
+        simIES = 1000*mean(simRT)/mean(simACC);
         simCE = [simCE,simIncIES-simConIES];
         simC = [simC,simConIES];
         simI = [simI,simIncIES];
+        simA = [simA,simIES];
     end
+    iesCH(i) = (prctile(simA,UpB)-prctile(simA,LwB))/2;
     CEiesCH(i) = (prctile(simCE,UpB)-prctile(simCE,LwB))/2;
     CiesCH(i) = (prctile(simC,UpB)-prctile(simC,LwB))/2;
     IiesCH(i) = (prctile(simI,UpB)-prctile(simI,LwB))/2;
 end
 
 %% Save variables to draw violin plots and error bar plots across tasks
+% Overall
+FL_rtGrandMean = rtGM;
+FL_rtConHalf = rtCH;
+FL_accGrandMean = accGM;
+FL_accConHalf = accCH;
+FL_iesGrandMean = iesGM;
+FL_iesConHalf = iesCH;
 % CE
 FL_CErtMat = plot_CErtMat;  % RT 18 session means
 FL_CEseMat = seHMat;
@@ -354,7 +401,9 @@ FL_CiesGrandMean = CiesGM;
 FL_IiesGrandMean = IiesGM;
 FL_CiesConHalf = CiesCH;
 FL_IiesConHalf = IiesCH;
-save('FL_CEmat.mat','FL_CErtMat','FL_CEseMat','FL_CEaccMat','FL_CEiesMat',...
+save('FL_CEmat.mat', 'FL_rtGrandMean','FL_accGrandMean','FL_iesGrandMean',...
+    'FL_rtConHalf','FL_accConHalf','FL_iesConHalf',...
+    'FL_CErtMat','FL_CEseMat','FL_CEaccMat','FL_CEiesMat',...
     'FL_CErtGrandMean','FL_CEaccGrandMean','FL_CEiesGrandMean',...
     'FL_CErtConHalf','FL_CEaccConHalf','FL_CEiesConHalf',...
     'FL_CrtMat','FL_IrtMat',...
