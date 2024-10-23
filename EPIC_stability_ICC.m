@@ -345,6 +345,8 @@ incNTi(3,:) = mean(incNT(:,:,3));
 %% Plot results
 taskStrngfx = {'Flanker','Prime-Probe','Stroop'};
 stp = nSteps;
+palette = parula(nTask);
+palette(3,:) = [1 0 0];
 % flanker task
 figure
 x = conNTi(1,1:stp)+incNTi(1,1:stp);
@@ -353,15 +355,15 @@ xconf = [x x(end:-1:1)];
 u = CIu(:,1);
 yconf = [CIl(:,1); u(end:-1:1)]';
 p = fill(xconf,yconf,'k'); hold on
-p.FaceColor = [0.8 0.8 0.8];
+p.FaceColor = [0.6 0.5 0.9];
 p.EdgeColor = 'none';
 % mean
-h1 = plot(x,plot_myICC(:,1)','Color','k','LineWidth',5);
+h1 = plot(x,plot_myICC(:,1)','Color',palette(1,:),'LineWidth',5);
 set(get(h1,'Parent'),'XScale','log')  % log-scale
-set(gca,'FontSize',24)
-xlabel('Number of trials','FontSize',28)
+set(gca,'FontSize',16)
+xlabel('Number of trials','FontSize',24)
 xlim([50 4000])
-%ylabel('ICC','FontSize',28)
+%ylabel('ICC','FontSize',24)
 ylim([0 1.1])
 xticks([0 50 100 200 400 800 1600 3200])
 grid on
@@ -374,15 +376,15 @@ xconf = [x x(end:-1:1)];
 u = CIu(:,2);
 yconf = [CIl(:,2); u(end:-1:1)]';
 p = fill(xconf,yconf,'r'); hold on
-p.FaceColor = [1 0.8 0.8];
+p.FaceColor = [0.7 0.95 0.95];
 p.EdgeColor = 'none';
 % mean
-h2 = plot(x,plot_myICC(:,2)','Color','r','LineWidth',5);
+h2 = plot(x,plot_myICC(:,2)','Color',palette(2,:),'LineWidth',5);
 set(get(h2,'Parent'),'XScale','log')  % log-scale
-set(gca,'FontSize',24)
-xlabel('Number of trials','FontSize',28)
+set(gca,'FontSize',16)
+xlabel('Number of trials','FontSize',24)
 xlim([50 4000])
-%ylabel('ICC','FontSize',28)
+%ylabel('ICC','FontSize',24)
 ylim([0 1.1])
 xticks([0 50 100 200 400 800 1600 3200])
 grid on
@@ -395,14 +397,14 @@ xconf = [x x(end:-1:1)];
 u = CIu(:,3);
 yconf = [CIl(:,3); u(end:-1:1)]';
 p = fill(xconf,yconf,'b'); hold on
-p.FaceColor = [0.8 0.8 1];
+p.FaceColor = [1 0.8 0.8];
 p.EdgeColor = 'none';
-h3 = plot(x,plot_myICC(:,3)','Color','b','LineWidth',5);
+h3 = plot(x,plot_myICC(:,3)','Color',palette(3,:),'LineWidth',5);
 set(get(h3,'Parent'),'XScale','log')  % log-scale
-set(gca,'FontSize',24)
-xlabel('Number of trials','FontSize',28)
+set(gca,'FontSize',16)
+xlabel('Number of trials','FontSize',24)
 xlim([50 4000])
-%ylabel('ICC','FontSize',28)
+%ylabel('ICC','FontSize',24)
 ylim([0 1.1])
 xticks([0 50 100 200 400 800 1600 3200])
 grid on
