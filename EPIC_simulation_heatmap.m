@@ -259,4 +259,4 @@ h.FontSize = 15;
 h.XDisplayLabels = Xlabels;
 h.YDisplayLabels = Ylabels;
 %h.Title = 'Correlation coefficients of the true and apparent rank orders';
-h.Colormap = spring;
+h.Colormap = parula;
