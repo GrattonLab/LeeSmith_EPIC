@@ -20,6 +20,9 @@ All MATLAB scripts are written and tested in MATLAB 2021b.
 
 *Note:* The installation can take up to 30 minutes, depending on your computer model.
 
+**Required for Experimental Tasks:**
+- **Psychtoolbox** for MATLAB: [Download Psychtoolbox](http://psychtoolbox.org/download)
+
 The code used in the supplemental materials for the Bayesian hierarchical approach employs the following software packages and libraries:
 - **Download WinBUGS:** [WinBUGS]( https://www.mrc-bsu.cam.ac.uk/software)
 - **WinBUGS/OpenBUGS Manual:** [User Manual](https://www.mrc-bsu.cam.ac.uk/wp-content/uploads/manual14.pdf)
@@ -43,7 +46,7 @@ Another public dataset with larger participant numbers. [Download here](https://
 ---
 
 # 4. Script Descriptions
-The following MATLAB scripts are categorized based on the datasets employed.
+The following scripts are organized into four subfolders based on the datasets and programming tools used: **EPIC, Public1, Public2,** and **Bayesian**. The first three subfolders contain Matlab scripts, and the **Bayesian** subfolder includes an R script.
 
 ### 4.1 EPIC Data
 #### 4.1.1 Preprocessing Scripts
@@ -81,6 +84,13 @@ Outputs: Figure 3, Supplementary Figures 10-15, 17.
 - `EPIC_stability_Stroop.m`
 - `EPIC_stability_ICC.m`
 
+#### 4.1.5 Experimental Tasks
+Scripts for running and collecting data from the four inhibitory control tasks used in this study. <br/>
+Requires [Psychtoolbox](http://psychtoolbox.org/download) and image files we share with the scripts.
+- Flanker Task: `tt_rc_FlankerPracTest.m`
+- Prime-Probe Task: `tt_rc_PrimeProbePracTest.m`
+- Stroop Task: `tt_rc_StroopTask.m`
+- Go/No-Go Task: `tt_rc_GoNoGo.m`
 
 ### 4.2 Public Data 1
 #### 4.2.1 Stability Curves
@@ -135,7 +145,7 @@ Outputs: Supplementary Figure 21.
 - `EPIC_Hedge_simulation_CFA_noisesigma.m`
 - `EPIC_Hedge_simulation_CFA_reliability.m`
 
-### 4.4 Bayesian Simulation Code
+### 4.4 Bayesian Simulation
 This R code simulates 25 replications of reaction time data for a congruency task. Parameters for the simulation were chosen based on estimates from Robinson and Steyvers (2023). The number of trials, subjects, and the ratio of within-subject variance to between-subject variance in the congruency effect can be manipulated at the start of the code.
 
 1. **Step 1:** A multilevel model using the `lme4` package obtains unbiased estimates of between-subject variability in the congruency effect and trial-level variability in reaction time within subjects. The code generates bias and precision (mean absolute deviation) values for these estimates.
