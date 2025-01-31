@@ -1,9 +1,13 @@
 # 1. EPIC (Extended Precision measurement of Inhibitory Control)
 
 ### 1.1 Description
-This project examines how precise individual-level estimates of inhibitory control measures can be when utilizing extended within-subject data (exceeding 5,000 trials per participant per task). The dataset is publicly available at [OSF](https://osf.io/jk9nb/?view_only=bfc4c56718334581b267ad2e6f970d74).
+- This project examines how precise individual-level estimates of inhibitory control measures can be when utilizing extended within-subject data (exceeding 5,000 trials per participant per task). The dataset is publicly available at [OSF](https://osf.io/jk9nb/?view_only=bfc4c56718334581b267ad2e6f970d74).
 
-### 1.2 Features
+### 1.2 Citation
+- The codes provided here are based on the methods described in the following article: <br/>
+Lee, H. J., Smith, D. M., Hauenstein, C., Dworetsky, A., Kraus, B. T., Dorn, M., Nee, D. E., & Gratton, C. (2025). Precise individual measures of inhibitory control. *Nature Human Behaviour*
+
+### 1.3 Features
 - All analyses can be replicated with the provided datasets and scripts.
 
 ---
@@ -55,7 +59,7 @@ Outputs: Figure 2, Supplementary Figures 1-4.
 - `EPIC_violinPlotGrandmeanPlot.m`
 
 #### 4.1.2 Rank Order Consistency Across Tasks
-Script to rank participants and compare consistency across the three tasks <br/>
+Script to rank participants and compare consistency across tasks. <br/>
 Outputs: Supplementary Figure 5.
 - `EPIC_rank.m`
 
@@ -103,7 +107,7 @@ Outputs: Supplementary Figure 18.
 
 ### 4.3 Public Data 2
 #### 4.3.1 Simulations to Examine How Within-Subject Variability Contaminates Between-Subject Variability
-Also requires EPIC data and `session_numbering.xlsx`. <br/>
+Requires EPIC data and `session_numbering.xlsx`. <br/>
 Outputs: Figure 6.
 - `EPIC_simulation_variability.m`
 
@@ -148,4 +152,4 @@ Outputs: Supplementary Figure 22.
 # 5. Contact
 For any questions or concerns, please email [leehj@illinois.edu].
 
-Last modified on 10/09/2024
+Last modified on 01/31/2025
