@@ -97,7 +97,7 @@ Outputs: Supplementary Figures 6A, 6D.
 - `EPIC_Robinson_rankOrder.m`
 
 #### 4.2.4 Drift-Diffusion Modeling
-Requires `ezdiffusion.m` (download at [OSF](https://osf.io/jk9nb)) and `ICC.m`. <br/>
+Requires `ezdiffusion.m` and `ICC.m`. <br/>
 Outputs: Figure 8, Supplementary Figure 19B.
 - `EPIC_Robinson_EZdiffusion.m`
 
