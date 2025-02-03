@@ -5,7 +5,7 @@
 
 ### 1.2 Citation
 - The codes provided here are based on the methods described in the following article: <br/>
-Lee, H. J., Smith, D. M., Hauenstein, C., Dworetsky, A., Kraus, B. T., Dorn, M., Nee, D. E., & Gratton, C. (2025). Precise individual measures of inhibitory control. *Nature Human Behaviour*
+Lee, H. J., Smith, D. M., Hauenstein, C., Dworetsky, A., Kraus, B. T., Dorn, M., Nee, D. E., & Gratton, C. (2025). [Precise individual measures of inhibitory control](https://osf.io/preprints/psyarxiv/rj2bu_v1). *Nature Human Behaviour*
 
 ### 1.3 Features
 - All analyses can be replicated with the provided datasets and scripts.
@@ -37,10 +37,10 @@ The code used in the supplemental materials for the Bayesian hierarchical approa
 ### 3.1 Main Data: EPIC Data
 The main dataset collected for this project. [Download here]( https://osf.io/jk9nb/?view_only=bfc4c56718334581b267ad2e6f970d74).
 
-### 3.2 Public Data 1: Robinson and Steyvers' (2023) Flanker Task Data
+### 3.2 Public Data 1: [Robinson and Steyvers' (2023)](https://psycnet.apa.org/manuscript/2023-08265-001.pdf) Flanker Task Data
 A public dataset used for analyses requiring larger participant numbers. [Download here](https://osf.io/6hjwv).
 
-### 3.3 Public Data 2: Hedge et al.'s (2018) Flanker and Stroop Task Data
+### 3.3 Public Data 2: [Hedge et al.'s (2018)](https://link.springer.com/content/pdf/10.3758/s13428-017-0935-1.pdf) Flanker and Stroop Task Data
 Another public dataset with larger participant numbers. [Download here](https://osf.io/cwzds).
 
 ---
@@ -49,7 +49,15 @@ Another public dataset with larger participant numbers. [Download here](https://
 The following scripts are organized into four subfolders based on the datasets and programming tools used: **EPIC, Public1, Public2,** and **Bayesian**. The first three subfolders contain Matlab scripts, and the **Bayesian** subfolder includes an R script.
 
 ### 4.1 EPIC Data
-#### 4.1.1 Preprocessing Scripts
+#### 4.1.1 Experimental Tasks
+Scripts for running and collecting data from the four inhibitory control tasks used in this study. <br/>
+Requires [Psychtoolbox](http://psychtoolbox.org/download) and image files we share with the scripts.
+- Flanker Task: `tt_rc_FlankerPracTest.m`
+- Prime-Probe Task: `tt_rc_PrimeProbePracTest.m`
+- Stroop Task: `tt_rc_StroopTask.m`
+- Go/No-Go Task: `tt_rc_GoNoGo.m`
+
+#### 4.1.2 Preprocessing Scripts
 Scripts to preprocess EPIC data for plotting violin plots and grand mean plots. <br/>
 Requires:
 - Excel file: `session_numbering.xlsx` (download at [OSF]( https://osf.io/jk9nb/?view_only=bfc4c56718334581b267ad2e6f970d74))
@@ -61,12 +69,12 @@ Outputs: Figure 2, Supplementary Figures 1-4.
 - `EPIC_preprocess_Stroop.m`
 - `EPIC_violinPlotGrandmeanPlot.m`
 
-#### 4.1.2 Rank Order Consistency Across Tasks
+#### 4.1.3 Rank Order Consistency Across Tasks
 Script to rank participants and compare consistency across tasks. <br/>
 Outputs: Supplementary Figure 5.
 - `EPIC_rank.m`
 
-#### 4.1.3 Within-Subject Variability Over Time
+#### 4.1.4 Within-Subject Variability Over Time
 Scripts to examine within-subject variability over time with extensive repeated testing. <br/>
 Requires:
 - Excel file: `session_numbering.xlsx`
@@ -75,7 +83,7 @@ Outputs: Supplementary Figures 7, 8, 9.
 - `EPIC_practice.m`
 - `EPIC_temporal.m`
 
-#### 4.1.4 Stability Curves
+#### 4.1.5 Stability Curves
 Scripts to draw stability curves. <br/>
 Requires `session_numbering.xlsx`. <br/>
 Outputs: Figure 3, Supplementary Figures 10-15, 17.
@@ -83,14 +91,6 @@ Outputs: Figure 3, Supplementary Figures 10-15, 17.
 - `EPIC_stability_method2.m`
 - `EPIC_stability_Stroop.m`
 - `EPIC_stability_ICC.m`
-
-#### 4.1.5 Experimental Tasks
-Scripts for running and collecting data from the four inhibitory control tasks used in this study. <br/>
-Requires [Psychtoolbox](http://psychtoolbox.org/download) and image files we share with the scripts.
-- Flanker Task: `tt_rc_FlankerPracTest.m`
-- Prime-Probe Task: `tt_rc_PrimeProbePracTest.m`
-- Stroop Task: `tt_rc_StroopTask.m`
-- Go/No-Go Task: `tt_rc_GoNoGo.m`
 
 ### 4.2 Public Data 1
 #### 4.2.1 Stability Curves
@@ -162,4 +162,4 @@ Outputs: Supplementary Figure 22.
 # 5. Contact
 For any questions or concerns, please email [leehj@illinois.edu].
 
-Last modified on 01/31/2025
+Last modified on 02/03/2025
