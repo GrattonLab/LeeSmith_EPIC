@@ -85,7 +85,7 @@ Outputs: Supplementary Figures 7, 8, 9.
 
 #### 4.1.5 Stability Curves
 Scripts to draw stability curves. <br/>
-Requires `session_numbering.xlsx`. <br/>
+Requires `session_numbering.xlsx` for all script and MATLAB function file, `ICC.m` ([Download Here](https://www.mathworks.com/matlabcentral/fileexchange/22099-intraclass-correlation-coefficient-icc)), for `EPIC_stability_ICC.m`. <br/>
 Outputs: Figure 3, Supplementary Figures 10-15, 17.
 - `EPIC_stability_method1.m`
 - `EPIC_stability_method2.m`
@@ -102,7 +102,7 @@ Outputs: Figure 5.
 - `EPIC_Robinson_simulation.m`
 
 #### 4.2.3 Rank Order Consistency Between the Congruency Effect and Incongruent Trials
-Requires MATLAB function file: `ICC.m` ([Download Here](https://www.mathworks.com/matlabcentral/fileexchange/22099-intraclass-correlation-coefficient-icc)). <br/>
+Requires `ICC.m`. <br/>
 Outputs: Supplementary Figures 6A, 6D.
 - `EPIC_Robinson_rankOrder.m`
 
