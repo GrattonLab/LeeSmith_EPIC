@@ -46,12 +46,11 @@ Another public dataset with larger participant numbers. [Download here](https://
 ---
 
 # 4. Script Descriptions
-The following scripts are organized into four subfolders based on the datasets and programming tools used: **EPIC, Public1, Public2,** and **Bayesian**. The first three subfolders contain Matlab scripts, and the **Bayesian** subfolder includes an R script.
+The following scripts are organized into four subfolders based on the datasets and programming tools used: **[EPIC](https://github.com/GrattonLab/LeeSmith_EPIC/tree/main/EPIC), [Public1](https://github.com/GrattonLab/LeeSmith_EPIC/tree/main/Public1), [Public2](https://github.com/GrattonLab/LeeSmith_EPIC/tree/main/Public2),** and **[Bayesian](https://github.com/GrattonLab/LeeSmith_EPIC/tree/main/Bayesian)**. The first three subfolders contain Matlab scripts, and the **Bayesian** subfolder includes an R script.
 
-### 4.1 EPIC Data
-#### 4.1.1 Experimental Tasks
+### 4.1 [EPIC Data](https://github.com/GrattonLab/LeeSmith_EPIC/tree/main/EPIC)
+#### 4.1.1 [Experimental Tasks](https://github.com/GrattonLab/LeeSmith_EPIC/tree/main/EPIC/task)
 Scripts for running and collecting data from the four inhibitory control tasks used in this study. <br/>
-Requires [Psychtoolbox](http://psychtoolbox.org/download) and image files we share with the scripts.
 - Flanker Task: `tt_rc_FlankerPracTest.m`
 - Prime-Probe Task: `tt_rc_PrimeProbePracTest.m`
 - Stroop Task: `tt_rc_StroopTask.m`
@@ -59,94 +58,135 @@ Requires [Psychtoolbox](http://psychtoolbox.org/download) and image files we sha
 
 #### 4.1.2 Preprocessing Scripts
 Scripts to preprocess EPIC data for plotting violin plots and grand mean plots. <br/>
-Requires:
-- Excel file: `session_numbering.xlsx` (download at [OSF]( https://osf.io/jk9nb/?view_only=bfc4c56718334581b267ad2e6f970d74))
-- MATLAB function file: `violinplot.m` (download at [Violinplot-MATLAB](https://github.com/bastibe/Violinplot-Matlab/blob/master/violinplot.m))
-
-Outputs: Figure 2, Supplementary Figures 1-4.
 - `EPIC_preprocess_flanker.m`
 - `EPIC_preprocess_primeprobe.m`
 - `EPIC_preprocess_Stroop.m`
-- `EPIC_violinPlotGrandmeanPlot.m`
+- `EPIC_violinPlotGrandmeanPlot.m` <br/>
+
+Requires:
+- Excel file: `session_numbering.xlsx` (download at [OSF]( https://osf.io/jk9nb/?view_only=bfc4c56718334581b267ad2e6f970d74))
+- MATLAB function file: `violinplot.m` (download at [Violinplot-MATLAB](https://github.com/bastibe/Violinplot-Matlab/blob/master/violinplot.m)) <br/>
+
+Outputs: Figure 2, Supplementary Figures 1-4
 
 #### 4.1.3 Rank Order Consistency Across Tasks
-Script to rank participants and compare consistency across tasks. <br/>
-Outputs: Supplementary Figure 5.
-- `EPIC_rank.m`
+A script to rank participants and assess consistency across tasks. <br/>
+- `EPIC_rank.m` <br/>
+
+Output: Supplementary Figure 5
 
 #### 4.1.4 Within-Subject Variability Over Time
 Scripts to examine within-subject variability over time with extensive repeated testing. <br/>
-Requires:
-- Excel file: `session_numbering.xlsx`
-
-Outputs: Supplementary Figures 7, 8, 9.
 - `EPIC_practice.m`
-- `EPIC_temporal.m`
+- `EPIC_temporal.m` <br/>
+
+Requires:
+- `session_numbering.xlsx` <br/>
+
+Outputs: Supplementary Figures 7, 8, 9
 
 #### 4.1.5 Stability Curves
-Scripts to draw stability curves. <br/>
-Requires `session_numbering.xlsx` for all script and MATLAB function file, `ICC.m` ([Download Here](https://www.mathworks.com/matlabcentral/fileexchange/22099-intraclass-correlation-coefficient-icc)), for `EPIC_stability_ICC.m`. <br/>
-Outputs: Figure 3, Supplementary Figures 10-15, 17.
+Scripts for generating stability curves. <br/>
 - `EPIC_stability_method1.m`
 - `EPIC_stability_method2.m`
 - `EPIC_stability_Stroop.m`
-- `EPIC_stability_ICC.m`
+- `EPIC_stability_ICC.m` <br/>
 
-### 4.2 Public Data 1
+Requires:
+- `session_numbering.xlsx` for all scripts
+- MATLAB function file, `ICC.m` ([Download Here](https://www.mathworks.com/matlabcentral/fileexchange/22099-intraclass-correlation-coefficient-icc)), for `EPIC_stability_ICC.m` <br/>
+
+Outputs: Figure 3, Supplementary Figures 10-15, 17
+
+### 4.2 [Public Data 1](https://github.com/GrattonLab/LeeSmith_EPIC/tree/main/Public1)
 #### 4.2.1 Stability Curves
-Outputs: Figure 4.
-- `EPIC_Robinson_stability.m`
+A script to generate stability curves using Robinson and Steyvers' (2023) data. <br/>
+- `EPIC_Robinson_stability.m` <br/>
+
+Output: Figure 4
 
 #### 4.2.2 Two Model Cases of Small Versus Large Trial Sampling
-Outputs: Figure 5.
-- `EPIC_Robinson_simulation.m`
+A script to compare the effects of small and large trial sampling on within- and between-subject variability. <br/>
+- `EPIC_Robinson_simulation.m` <br/>
+
+Output: Figure 5
 
 #### 4.2.3 Rank Order Consistency Between the Congruency Effect and Incongruent Trials
-Requires `ICC.m`. <br/>
-Outputs: Supplementary Figures 6A, 6D.
-- `EPIC_Robinson_rankOrder.m`
+A script to rank participants based on their congruency effect and incongruent trial performance to assess consistency. <br/>
+- `EPIC_Robinson_rankOrder.m` <br/>
+
+Requires: `ICC.m` <br/>
+
+Outputs: Supplementary Figures 6A, 6D
 
 #### 4.2.4 Drift-Diffusion Modeling
-Requires `ezdiffusion.m` and `ICC.m`. <br/>
-Outputs: Figure 8, Supplementary Figure 19B.
-- `EPIC_Robinson_EZdiffusion.m`
+A script to evaluate the reliability of EZ-diffusion model parameters across different trial counts. <br/>
+- `EPIC_Robinson_EZdiffusion.m` <br/>
+
+Requires:
+- `ezdiffusion.m`
+- `ICC.m` <br/>
+
+Outputs: Figure 8, Supplementary Figure 19B
 
 #### 4.2.5 Between-Subject Standard Deviation After Accounting for Trial Noise
-Outputs: Supplementary Figure 18.
-- `EPIC_Robinson_correctingBSsd.m`
+A script to correct between-subject standard deviation by adjusting for sampling noise. <br/>
+- `EPIC_Robinson_correctingBSsd.m` <br/>
 
-### 4.3 Public Data 2
+Outputs: Supplementary Figure 18
+
+### 4.3 [Public Data 2](https://github.com/GrattonLab/LeeSmith_EPIC/tree/main/Public2)
 #### 4.3.1 Simulations to Examine How Within-Subject Variability Contaminates Between-Subject Variability
-Requires EPIC data and `session_numbering.xlsx`. <br/>
-Outputs: Figure 6.
-- `EPIC_simulation_variability.m`
+A script to simulate how varying within-subject variability affects between-subject variability. <br/>
+- `EPIC_simulation_variability.m` <br/>
+
+Requires:
+- EPIC data
+- `session_numbering.xlsx` <br/>
+
+Output: Figure 6
 
 #### 4.3.2 Effect of Trial and Participant Numbers on ICC
-Requires `ICC.m`. <br/>
-Outputs: Figure 7.
-- `EPIC_simulation_heatmap.m`
+A script to plot rank-order consistency as a function of sample size and trial count. <br/>
+- `EPIC_simulation_heatmap.m` <br/>
+
+Requires: `ICC.m` <br/>
+
+Output: Figure 7
 
 #### 4.3.3 Rank Order Consistency Between Congruency Effect and Incongruent Trials
-Requires: `ICC.m`. <br/>
-Outputs: Supplementary Figures 6B, 6C, 6E, 6F.
+Scripts to rank participants based on their congruency effect and incongruent trial performance to assess consistency, with one script incorporating simulations of extended trial sampling. <br/>
 - `EPIC_Hedge_rankOrder.m`
-- `EPIC_Hedge_simulation_rankOrder.m`
+- `EPIC_Hedge_simulation_rankOrder.m` <br/>
+
+Requires: `ICC.m` <br/>
+
+Outputs: Supplementary Figures 6B, 6C, 6E, 6F
 
 #### 4.3.4 Drift-Diffusion Model
-Requires `ezdiffusion.m` and `ICC.m`. <br/>
-Outputs: Supplementary Figures 19A, 19C, 20.
+Scripts to simulate and fit the EZ-diffusion model, examining the effects of sample size and noise on model parameter reliability. <br/>
 - `EPIC_Hedge_EZdiffusion.m`
 - `EPIC_Hedge_simulation_EZdiffusion_noisesigma.m`
-- `EPIC_Hedge_simulation_EZdiffusion_reliability.m`
+- `EPIC_Hedge_simulation_EZdiffusion_reliability.m` <br/>
+
+Requires:
+- `ezdiffusion.m`
+- `ICC.m` <br/>
+
+Outputs: Supplementary Figures 19A, 19C, 20
 
 #### 4.3.5 Factor Analysis
-Requires `ICC.m`. <br/>
-Outputs: Supplementary Figure 21.
+Scripts to simulate and conduct confirmatory factor analysis, examining the effects of sample size and noise on factor score reliability. <br/>
 - `EPIC_Hedge_simulation_CFA_noisesigma.m`
-- `EPIC_Hedge_simulation_CFA_reliability.m`
+- `EPIC_Hedge_simulation_CFA_reliability.m` <br/>
 
-### 4.4 Bayesian Simulation
+Requires: `ICC.m` <br/>
+
+Output: Supplementary Figure 21
+
+### 4.4 [Bayesian Simulation](https://github.com/GrattonLab/LeeSmith_EPIC/tree/main/Bayesian)
 This R code simulates 25 replications of reaction time data for a congruency task. Parameters for the simulation were chosen based on estimates from Robinson and Steyvers (2023). The number of trials, subjects, and the ratio of within-subject variance to between-subject variance in the congruency effect can be manipulated at the start of the code.
+- `Bayesian_Sim.R` <br/>
 
 1. **Step 1:** A multilevel model using the `lme4` package obtains unbiased estimates of between-subject variability in the congruency effect and trial-level variability in reaction time within subjects. The code generates bias and precision (mean absolute deviation) values for these estimates.
 
@@ -154,12 +194,11 @@ This R code simulates 25 replications of reaction time data for a congruency tas
 
 3. **Step 3:** A more traditional (non-Bayesian) approach estimates subject-level congruency effects. Initial mean reaction times are calculated for each participant for congruent and incongruent trials (no priors are incorporated, so no shrinkage occurs). The difference between these means provides the congruency effect for each subject, along with bias and precision (mean absolute deviation) values.
 
-Outputs: Supplementary Figure 22.
-- `Bayesian_Sim.R`
+Output: Supplementary Figure 22
 
 ---
 
 # 5. Contact
 For any questions or concerns, please email [leehj@illinois.edu].
 
-Last modified on 02/03/2025
+Last modified on 02/07/2025
