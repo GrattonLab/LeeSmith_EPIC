@@ -148,6 +148,7 @@ for i = 1:nSubj2
 end
 
 %% Plot
+palette = parula(3);
 % (1) RT (Supp. Fig. 6B)
 [~,p1] = sort(GrtMatH(2,:)-GrtMatH(1,:),'descend');
 r1 = 1:nSubjT;
@@ -160,8 +161,8 @@ tauH = corr(r1',r2','type','kendall');
 % ICC
 iccH = ICC([r1',r2'],'A-k',0.05);
 figure
-scatter(GrtMatH(2,:),GrtMatH(2,:)-GrtMatH(1,:),'filled','MarkerFaceColor',[0 .7 .7],...
-    'MarkerEdgeColor',[0 .4 .4])
+scatter(GrtMatH(2,:),GrtMatH(2,:)-GrtMatH(1,:),'filled','MarkerFaceColor',palette(1,:),...
+    'MarkerEdgeColor',[.6 .6 .6])
 refline
 axis square
 set(gca,'FontSize',16)
@@ -184,8 +185,8 @@ tauH = corr(r1',r2','type','kendall');
 % ICC
 iccH = ICC([r1',r2'],'A-k',0.05);
 figure
-scatter(GpeMatH(2,:),GpeMatH(2,:)-GpeMatH(1,:),'filled','MarkerFaceColor',[0 .7 .7],...
-    'MarkerEdgeColor',[0 .4 .4])
+scatter(GpeMatH(2,:),GpeMatH(2,:)-GpeMatH(1,:),'filled','MarkerFaceColor',palette(1,:),...
+    'MarkerEdgeColor',[.6 .6 .6])
 refline
 axis square
 set(gca,'FontSize',16)
