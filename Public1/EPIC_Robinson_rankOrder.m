@@ -115,6 +115,7 @@ for i = 1:l_sGrp
 end
 
 %% Plot the correlation between CE and incongruent trials
+palette = parula(3);
 % (1) RT (Supp. Fig. 6A)
 [~,p1] = sort(GrtMatR(2,:)-GrtMatR(1,:),'descend');
 r1 = 1:l_sGrp;
@@ -127,8 +128,8 @@ tauH = corr(r1',r2','type','kendall');
 % ICC
 iccH = ICC([r1',r2'],'A-k',0.05);
 figure
-scatter(GrtMatR(2,:),GrtMatR(2,:)-GrtMatR(1,:),'filled','MarkerFaceColor',[0 .7 .7],...
-    'MarkerEdgeColor',[0 .4 .4])
+scatter(GrtMatR(2,:),GrtMatR(2,:)-GrtMatR(1,:),'filled','MarkerFaceColor',palette(1,:),...
+    'MarkerEdgeColor',[.6 .6 .6])
 lsline
 axis square
 set(gca,'FontSize',16)
@@ -152,8 +153,8 @@ tauH = corr(r1',r2','type','kendall');
 % ICC
 iccH = ICC([r1',r2'],'A-k',0.05);
 figure
-scatter(GpeMatR(2,:),GpeMatR(2,:)-GpeMatR(1,:),'filled','MarkerFaceColor',[0 .7 .7],...
-    'MarkerEdgeColor',[0 .4 .4])
+scatter(GpeMatR(2,:),GpeMatR(2,:)-GpeMatR(1,:),'filled','MarkerFaceColor',palette(1,:),...
+    'MarkerEdgeColor',[.6 .6 .6])
 lsline
 axis square
 %ylim([-0.02 0.15])
