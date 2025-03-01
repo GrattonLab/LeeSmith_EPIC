@@ -243,6 +243,7 @@ save('rankcompareCEincSIM','ceMr','IncMr','ceMa','IncMa')
 %load rankcompareCEincSIM
 
 %% Plot
+palette = parula(3);
 % (1) RT (Supp. Fig. 6C)
 [~,p1] = sort(mean(IncMr,2),'descend');
 r1 = 1:nsSubj;
@@ -255,8 +256,8 @@ TAUcei = corr(r1',r2','type','kendall');
 % ICC
 ICCcei = ICC([r1',r2'],'A-k',0.05);  % 'A-k'
 figure
-scatter(mean(IncMr,2),mean(ceMr,2),'filled','MarkerFaceColor',[0 .7 .7],...
-    'MarkerEdgeColor',[0 .4 .4])
+scatter(mean(IncMr,2),mean(ceMr,2),'filled','MarkerFaceColor',palette(1,:),...
+    'MarkerEdgeColor',[.6 .6 .6])
 refline
 axis square
 set(gca,'FontSize',16)
@@ -282,8 +283,8 @@ TAUcei = corr(r1',r2','type','kendall');
 % ICC
 ICCcei = ICC([r1',r2'],'A-k',0.05);
 figure
-scatter(mean(IncMa,2),mean(ceMa,2),'filled','MarkerFaceColor',[0 .7 .7],...
-    'MarkerEdgeColor',[0 .4 .4])
+scatter(mean(IncMa,2),mean(ceMa,2),'filled','MarkerFaceColor',palette(1,:),...
+    'MarkerEdgeColor',[.6 .6 .6])
 refline
 axis square
 set(gca,'FontSize',16)
