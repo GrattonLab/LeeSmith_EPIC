@@ -1,8 +1,7 @@
-
 #Loading necessary packages
-library(R2OpenBUGS)
+install.packages('R2WinBUGS')
+library('R2WinBUGS')
 library(MASS)
-
 
 
 #Set number of trials per subject per condition (TrialN)
@@ -152,11 +151,11 @@ for (r in 1:25){
   prec_b1=1/MLM_sim_var[2,r]
   prec_error=1/MLM_sim_var[3,r]
   All_List<-list(y=as.matrix(y),N=100*TrialN*2,P=100,mu_b0=mu_b0,mu_b1=mu_b1,prec_b0=prec_b0,prec_b1=prec_b1,prec_error=prec_error)
-  runjags.options(force.summary = TRUE)
-  Intxn1 <- run.jags("KatB3.jag", data=All_List, monitor=c('b1','var_b1'),
-                     n.chains=1, burnin=3000, sample=1000,thin=1)$summaries
   
-  Bayes_Est[,r]<-Intxn1[1:100,4]
+  BayesResult <- bugs(data=All_List, parameters.to.save=c('b1','var_b1'), model.file='Cong.txt',
+                    n.chains=3, n.iter=20000,n.burnin=10000,inits=NULL,
+                    bugs.directory="C:/Users/Skip/Desktop/WB/winbugs14_full_patched/WinBUGS14")$summary
+  Bayes_Est[,r]<-BayesResult[1:100,1]
 }
 
 
