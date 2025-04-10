@@ -67,13 +67,13 @@ Requires:
 - Excel file: `session_numbering.xlsx` (download at [OSF]( https://osf.io/jk9nb/?view_only=bfc4c56718334581b267ad2e6f970d74))
 - MATLAB function file: `violinplot.m` (download at [Violinplot-MATLAB](https://github.com/bastibe/Violinplot-Matlab/blob/master/violinplot.m)) <br/>
 
-Outputs: Figure 2, Supplementary Figures 1-4
+Outputs: Figure 2, Supplementary Figures S3-S6
 
 #### 4.1.3 Rank Order Consistency Across Tasks
 A script to rank participants and assess consistency across tasks. <br/>
 - `EPIC_rank.m` <br/>
 
-Output: Supplementary Figure 5
+Output: Extended Data Figure 1
 
 #### 4.1.4 Within-Subject Variability Over Time
 Scripts to examine within-subject variability over time with extensive repeated testing. <br/>
@@ -83,7 +83,7 @@ Scripts to examine within-subject variability over time with extensive repeated 
 Requires:
 - `session_numbering.xlsx` <br/>
 
-Outputs: Supplementary Figures 7, 8, 9
+Outputs: Extended Data Figures 3, 4, 5
 
 #### 4.1.5 Stability Curves
 Scripts for generating stability curves. <br/>
@@ -96,7 +96,7 @@ Requires:
 - `session_numbering.xlsx` for all scripts
 - MATLAB function file, `ICC.m` ([Download Here](https://www.mathworks.com/matlabcentral/fileexchange/22099-intraclass-correlation-coefficient-icc)), for `EPIC_stability_ICC.m` <br/>
 
-Outputs: Figure 3, Supplementary Figures 10-15, 17
+Outputs: Figure 3, Supplementary Figures S7-S12, Extended Data Figure 6
 
 ### 4.2 [Public Data 1](https://github.com/GrattonLab/LeeSmith_EPIC/tree/main/Public1)
 #### 4.2.1 Stability Curves
@@ -117,7 +117,7 @@ A script to rank participants based on their congruency effect and incongruent t
 
 Requires: `ICC.m` <br/>
 
-Outputs: Supplementary Figures 6A, 6D
+Outputs: Extended Data Figure 2A, 2D
 
 #### 4.2.4 Drift-Diffusion Modeling
 A script to evaluate the reliability of EZ-diffusion model parameters across different trial counts. <br/>
@@ -127,13 +127,13 @@ Requires:
 - `ezdiffusion.m`
 - `ICC.m` <br/>
 
-Outputs: Figure 8, Supplementary Figure 19B
+Outputs: Figure 8, Extended Data Figure 8B
 
 #### 4.2.5 Between-Subject Standard Deviation After Accounting for Trial Noise
 A script to correct between-subject standard deviation by adjusting for sampling noise. <br/>
 - `EPIC_Robinson_correctingBSsd.m` <br/>
 
-Outputs: Supplementary Figure 18
+Outputs: Extended Data Figure 7
 
 ### 4.3 [Public Data 2](https://github.com/GrattonLab/LeeSmith_EPIC/tree/main/Public2)
 #### 4.3.1 Simulations to Examine How Within-Subject Variability Contaminates Between-Subject Variability
@@ -161,7 +161,7 @@ Scripts to rank participants based on their congruency effect and incongruent tr
 
 Requires: `ICC.m` <br/>
 
-Outputs: Supplementary Figures 6B, 6C, 6E, 6F
+Outputs: Extended Data Figure 2B, 2C, 2E, 2F
 
 #### 4.3.4 Drift-Diffusion Model
 Scripts to simulate and fit the EZ-diffusion model, examining the effects of sample size and noise on model parameter reliability. <br/>
@@ -173,7 +173,7 @@ Requires:
 - `ezdiffusion.m`
 - `ICC.m` <br/>
 
-Outputs: Supplementary Figures 19A, 19C, 20
+Outputs: Extended Data Figure 8A, 8C, Supplementary Figure S14
 
 #### 4.3.5 Factor Analysis
 Scripts to simulate and conduct confirmatory factor analysis, examining the effects of sample size and noise on factor score reliability. <br/>
@@ -182,7 +182,7 @@ Scripts to simulate and conduct confirmatory factor analysis, examining the effe
 
 Requires: `ICC.m` <br/>
 
-Output: Supplementary Figure 21
+Output: Extended Data Figure 9
 
 ### 4.4 [Bayesian Simulation](https://github.com/GrattonLab/LeeSmith_EPIC/tree/main/Bayesian)
 This R code simulates 25 replications of reaction time data for a congruency task. Parameters for the simulation were chosen based on estimates from Robinson and Steyvers (2023). The number of trials, subjects, and the ratio of within-subject variance to between-subject variance in the congruency effect can be manipulated at the start of the code.
@@ -194,11 +194,11 @@ This R code simulates 25 replications of reaction time data for a congruency tas
 
 3. **Step 3:** A more traditional (non-Bayesian) approach estimates subject-level congruency effects. Initial mean reaction times are calculated for each participant for congruent and incongruent trials (no priors are incorporated, so no shrinkage occurs). The difference between these means provides the congruency effect for each subject, along with bias and precision (mean absolute deviation) values.
 
-Output: Supplementary Figure 22
+Output: Extended Data Figure 10
 
 ---
 
 # 5. Contact
 For any questions or concerns, please email [leehj@illinois.edu].
 
-Last modified on 02/07/2025
+Last modified on 04/10/2025
