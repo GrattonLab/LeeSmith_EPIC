@@ -14,7 +14,7 @@
 % factor analysis.
 %
 %% Outputs:
-% Supp. Fig. 21
+% Extended Data Figure 9
 % (Plot of test-retest reliability of factor scores)
 %
 % Created on 04/26/2023 by HJ Lee
@@ -412,7 +412,7 @@ for rI = 1:length(crossTaskcorr)
 end
 subplot(length(nTdrawn),length(crossTaskcorr)*(nTask+1),4+(rI-1)*(nTask+1)); title('Factor Score')
 
-%% Plot heatmap (Supp. Fig. 21)
+%% Plot heatmap
 figure
 h = heatmap(round(ICCmat.*100)/100);  % size 7*20
 h.XLabel = 'Cross-task correlation';
