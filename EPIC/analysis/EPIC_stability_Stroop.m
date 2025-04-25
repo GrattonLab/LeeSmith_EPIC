@@ -14,7 +14,7 @@
 % Interference effect: incongruent-neutral
 %
 %% Outputs:
-% Supp. Fig. 14: Stability curves of the facilitation effect and the interference effect
+% Supp. Fig. 9: Stability curves of the facilitation effect and the interference effect
 %
 % Created on 12/20/2023 by HJ Lee
 % Last modified on 02/04/2025
@@ -285,7 +285,7 @@ end
 %    load ACCstabilityCurveVariables1_Stroop_FEIE
 %end
 
-%% Plot the data (Supp. Fig. 14)
+%% Plot the data (Supp. Fig. 9)
 % Stability curve
 taskStrng_print = {'Stroop'};
 stp = nSteps;
