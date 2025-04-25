@@ -14,7 +14,7 @@
 % reliability of model parameters.
 %
 %% Outputs:
-% Supp. Fig. 20
+% Supp. Fig. 12
 % Plot of the split-half reliability of the parameters (drift rate, 
 % boundary separation, and nondecision time)
 %
@@ -570,7 +570,7 @@ save('EZDsim_testretestResult_avg','simCErt_matc','simCErt_mati','simCEvar_matc'
     'simCEacc_matc2','simCEacc_mati2','vMc2','vMi2','aMc2','aMi2','TerMc2','TerMi2')
 %load EZDsim_testretestResult_avg
 
-%% Plot results (Supp. Fig. 20)
+%% Plot results (Supp. Fig. 12)
 % Colormap
 cmap1 = parula(3);
 cmap2 = spring(3);
