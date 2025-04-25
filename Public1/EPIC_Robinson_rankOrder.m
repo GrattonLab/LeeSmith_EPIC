@@ -11,7 +11,7 @@
 % incongruent trial performance to assess their consistency.
 %
 %% Outputs:
-% Supp. Figs. 6A and 6D
+% Extended Data Figure 2A and 2D
 %
 % Created on 05/16/2023 by HJ Lee
 % Last modified on 02/04/2025
@@ -116,7 +116,7 @@ end
 
 %% Plot the correlation between CE and incongruent trials
 palette = parula(3);
-% (1) RT (Supp. Fig. 6A)
+% (1) RT (Extended Data Figure 2A)
 [~,p1] = sort(GrtMatR(2,:)-GrtMatR(1,:),'descend');
 r1 = 1:l_sGrp;
 r1(p1) = r1;
@@ -140,7 +140,7 @@ set(rText, 'fontsize', 16, 'verticalalignment', 'top', 'horizontalalignment', 'l
 xlabel('Incongruent trial reaction time (sec)','FontSize',16)
 ylabel('Congruency effect reaction time (sec)','FontSize',16)
 %title('A) Robinson & Steyvers'' (2023) data','FontSize',19)
-% (2) Percent correct (Supp. Fig. 6D)
+% (2) Percent error (Extended Data Figure 2D)
 GpeMatR = 100.*(1-GaccMatR);
 [~,p1] = sort(GpeMatR(2,:)-GpeMatR(1,:),'descend');
 r1 = 1:l_sGrp;
