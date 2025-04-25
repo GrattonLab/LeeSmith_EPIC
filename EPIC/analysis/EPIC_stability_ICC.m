@@ -13,7 +13,7 @@
 % dataset has only 9 participants)
 %
 %% Outputs:
-% Supp. Fig. 15
+% Supp. Fig. 10
 %
 % Created on 08/28/2024 by HJ Lee
 % Last modified on 02/04/2025
