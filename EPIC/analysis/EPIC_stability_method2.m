@@ -22,9 +22,9 @@
 % 6. Plots the width of the CI
 %
 %% Outputs:
-% Supp. Fig. 10A & 10C: CE RT with or without practice effects
-% Supp. Fig. 12B: CE accuracy
-% Supp. Fig. 13B: CE IES
+% Supp. Fig. 5A & 5C: CE RT with or without practice effects
+% Supp. Fig. 7B: CE accuracy
+% Supp. Fig. 7B: CE IES
 %
 % Created on 03/1/2024 by HJ Lee
 % Last modifed on 02/04/2025
@@ -318,7 +318,7 @@ end
 %     conIntvl = conIntvl_3;
 % end
 
-%% Plot (Supp. Figs. 10, 12-13)
+%% Plot
 % Stability curve
 cmap = turbo(nSubj);
 taskStrngfx = {'Flanker','Prime-Probe','Stroop'};
