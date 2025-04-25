@@ -14,7 +14,7 @@
 % different trial counts.
 %
 %% Outputs:
-% Fig. 8 and Supp. Fig. 19B
+% Fig. 8 and Extended Data Figure 8B
 %
 % Created on 05/16/2023 by HJ Lee
 % Last modified on 02/04/2025
@@ -417,7 +417,7 @@ for k = 1:drawLR
     %title('Nondecision time','FontSize',30)
 end
 
-%% Plot ICC and its 95% confidence interval as a function of number of trials (Supp. Fig. 19B)
+%% Plot ICC and its 95% confidence interval as a function of number of trials (Extended Data Figure 8B)
 myICC = nan(drawLR,3);  % 3: EZ-diffusion model parameters
 ICC_ci = nan(drawLR,3);
 for k = 1:drawLR
