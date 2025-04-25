@@ -13,7 +13,7 @@
 %
 %% Outputs:
 % Matrices of rank orders for the congruency effect across the three tasks
-% Supp. Fig. 5
+% Extended Data Figure 1
 %
 % Created on 12/19/2023 by HJ Lee
 % Last modified on 02/03/2025
