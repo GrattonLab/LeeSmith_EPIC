@@ -1,7 +1,7 @@
 # 1. EPIC (Extended Precision measurement of Inhibitory Control)
 
 ### 1.1 Description
-- This project examines how precise individual-level estimates of inhibitory control measures can be when utilizing extended within-subject data (exceeding 5,000 trials per participant per task). The dataset is publicly available at [OSF](https://osf.io/jk9nb/?view_only=bfc4c56718334581b267ad2e6f970d74).
+- This project examines how precise individual-level estimates of inhibitory control measures can be when utilizing extended within-subject data (exceeding 5,000 trials per participant per task). The dataset is publicly available at [OSF](https://osf.io/jk9nb/).
 
 ### 1.2 Citation
 - The codes provided here are based on the methods described in the following article: <br/>
@@ -35,7 +35,7 @@ The code used in the supplemental materials for the Bayesian hierarchical approa
 # 3. Data Descriptions
 
 ### 3.1 Main Data: EPIC Data
-The main dataset collected for this project. [Download here]( https://osf.io/jk9nb/?view_only=bfc4c56718334581b267ad2e6f970d74).
+The main dataset collected for this project. [Download here]( https://osf.io/jk9nb/).
 
 ### 3.2 Public Data 1: [Robinson and Steyvers' (2023)](https://psycnet.apa.org/manuscript/2023-08265-001.pdf) Flanker Task Data
 A public dataset used for analyses requiring larger participant numbers. [Download here](https://osf.io/6hjwv).
@@ -64,10 +64,10 @@ Scripts to preprocess EPIC data for plotting violin plots and grand mean plots. 
 - `EPIC_violinPlotGrandmeanPlot.m` <br/>
 
 Requires:
-- Excel file: `session_numbering.xlsx` (download at [OSF]( https://osf.io/jk9nb/?view_only=bfc4c56718334581b267ad2e6f970d74))
+- Excel file: `session_numbering.xlsx` (download at [OSF](https://osf.io/jk9nb/))
 - MATLAB function file: `violinplot.m` (download at [Violinplot-MATLAB](https://github.com/bastibe/Violinplot-Matlab/blob/master/violinplot.m)) <br/>
 
-Outputs: Figure 2, Supplementary Figures S3-S6
+Outputs: Figure 2, Supplementary Figures 1-4
 
 #### 4.1.3 Rank Order Consistency Across Tasks
 A script to rank participants and assess consistency across tasks. <br/>
@@ -96,7 +96,7 @@ Requires:
 - `session_numbering.xlsx` for all scripts
 - MATLAB function file, `ICC.m` ([Download Here](https://www.mathworks.com/matlabcentral/fileexchange/22099-intraclass-correlation-coefficient-icc)), for `EPIC_stability_ICC.m` <br/>
 
-Outputs: Figure 3, Supplementary Figures S7-S12, Extended Data Figure 6
+Outputs: Figure 3, Supplementary Figures 5-10, Extended Data Figure 6
 
 ### 4.2 [Public Data 1](https://github.com/GrattonLab/LeeSmith_EPIC/tree/main/Public1)
 #### 4.2.1 Stability Curves
@@ -173,7 +173,7 @@ Requires:
 - `ezdiffusion.m`
 - `ICC.m` <br/>
 
-Outputs: Extended Data Figure 8A, 8C, Supplementary Figure S14
+Outputs: Extended Data Figure 8A, 8C, Supplementary Figure 12
 
 #### 4.3.5 Factor Analysis
 Scripts to simulate and conduct confirmatory factor analysis, examining the effects of sample size and noise on factor score reliability. <br/>
@@ -201,4 +201,4 @@ Output: Extended Data Figure 10
 # 5. Contact
 For any questions or concerns, please email [leehj@illinois.edu].
 
-Last modified on 04/10/2025
+Last modified on 04/25/2025
