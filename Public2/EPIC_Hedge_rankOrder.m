@@ -11,7 +11,7 @@
 % incongruent trial performance to assess their consistency.
 %
 %% Outputs:
-% Supp. Figs. 6B and 6E
+% Extended Data Figure 2B and 2E
 %
 % Created on 05/16/2023 by HJ Lee
 % Last modified on 02/04/2025
@@ -149,7 +149,7 @@ end
 
 %% Plot
 palette = parula(3);
-% (1) RT (Supp. Fig. 6B)
+% (1) RT (Extended Data Figure 2B)
 [~,p1] = sort(GrtMatH(2,:)-GrtMatH(1,:),'descend');
 r1 = 1:nSubjT;
 r1(p1) = r1;
@@ -172,7 +172,7 @@ set(rText, 'fontsize', 16, 'verticalalignment', 'top', 'horizontalalignment', 'l
 xlabel('Incongruent trial reaction time (sec)','FontSize',16)
 ylabel('Congruency effect reaction time (sec)','FontSize',16)
 %title('B) Hedge et al.''s (2018) data','FontSize',19)
-% (2) Percent correct (Supp. Fig. 6E)
+% (2) Percent error (Extended Data Figure 2E)
 GpeMatH = 100.*(1-GaccMatH);
 [~,p1] = sort(GpeMatH(2,:)-GpeMatH(1,:),'descend');
 r1 = 1:nSubjT;
