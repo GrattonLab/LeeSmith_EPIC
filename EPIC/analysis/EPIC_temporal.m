@@ -10,8 +10,8 @@
 % specifically the impairment in reaction time and accuracy over time.
 %
 %% Outputs:
-%   - Dot plots of overall reaction time/accuracy across sessions (Supp.Fig.8)
-%   - Bar graphs comparing the first and second halves of each session (Supp.Fig.9)
+%   - Dot plots of overall reaction time/accuracy across sessions (Extended Data Figure 4)
+%   - Bar graphs comparing the first and second halves of each session (Extended Data Figure 5)
 %
 % Created on 12/18/2023 by HJ Lee
 % Last modified on 02/03/2025
@@ -113,7 +113,7 @@ for i = 1:nSubj
 end
 
 %% Connected dot plots
-% Performance impairment across sessions (Supp.Fig.8)
+% Performance impairment across sessions (Extended Data Figure 4)
 i_cmap = turbo(nSubj);
 for t = 1:nTask
     % RT
@@ -149,7 +149,7 @@ for t = 1:nTask
 end
 
 %% Comparing the first and second halves of each session
-% Performance impairment within session (Supp.Fig.9)
+% Performance impairment within session (Extended Data Figure 5)
 % Reaction time
 for t = 1:nTask
     figure
