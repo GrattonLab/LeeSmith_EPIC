@@ -11,7 +11,7 @@
 % Sample variance = 2*(Mean squared error)/trial size + true variance
 % 
 %% Outputs:
-% Supp. Fig. 18
+% Extended Data Figure 7
 %
 % Created on 01/25/2024 by HJ Lee
 % Last modified on 02/04/2025
@@ -173,7 +173,7 @@ for i_t = 1:numTest
 end
 save('Robinson_sim_correctedVariance.mat','imCE','imC','imI','fxdC','fxdI','Vs','iSamVar','myMSE','c_Vs')
 
-%% Plot the results (Supp. Fig. 18)
+%% Plot the results
 figure
 subplot(2,1,1)
 x = 1:length(nSampling);
