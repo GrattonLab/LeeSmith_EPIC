@@ -14,7 +14,7 @@
 % trial counts.
 %
 %% Outputs:
-% Supp. Figs. 19A and 19C
+% Extended Data Figure 8A and 8C
 %
 % Created on 05/16/2023 by HJ Lee
 % Last modified on 02/04/2025
@@ -487,7 +487,7 @@ for i = 1:nSubjT
     end
 end
 
-%% Plot the results: EZD modeling parameters (Supp. Fig. 19A)
+%% Plot the results: EZD modeling parameters (Extended Data Figure 8A)
 cmap1 = parula(3);
 cmap2 = spring(3);
 cmap3 = cool(3);
@@ -615,7 +615,7 @@ for k = 1:drawLH
     %title('Nondecision time','FontSize',30)
 end
 
-%% Plot ICC and its 95% confidence interval as a function of number of trials (Supp. Fig. 19C)
+%% Plot ICC and its 95% confidence interval as a function of number of trials (Extended Data Figure 8C)
 myICC = nan(drawLH,3);  % 3: EZ-diffusion model parameters
 ICC_ci = nan(drawLH,3);
 for k = 1:drawLH
