@@ -10,7 +10,7 @@
 % specifically the improvement in congruency effect over time.
 %
 %% Outputs:
-% Line graphs of the congruency effect over time (Supp.Fig.7)
+% Line graphs of the congruency effect over time (Extended Data Figure 3)
 %
 % Created on 10/02/2022 by HJ Lee
 % Last modified on 02/03/2025
