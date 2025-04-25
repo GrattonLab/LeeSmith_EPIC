@@ -12,7 +12,7 @@
 % simulations of extended trial sampling.
 %
 %% Outputs:
-% Supp. Figs. 6C and 6F
+% Extended Data Figure 2C and 2F
 %
 % Created on 05/02/2023 by HJ Lee
 % Last modified on 02/04/2025
@@ -183,7 +183,7 @@ U_a = copularnd('t',[1 rho_a; rho_a 1], nu, bs_dist_n);
 X1_a = ksdensity(GaccMat(1,:),U_a(:,1),'function','icdf','width',.008);
 X2_a = ksdensity(GaccMat(2,:),U_a(:,2),'function','icdf','width',.01);
 
-%% Simulation - Rank order comparison between CE and incongruent trials (Supp. Fig. 6C, 6F)
+%% Simulation - Rank order comparison between CE and incongruent trials (Extended Data Figure 2C, 2F)
 % Preassignment
 nsSubj = 500;
 nsTrials = 3200;  % the amount sufficient for highly reliable results
@@ -244,7 +244,7 @@ save('rankcompareCEincSIM','ceMr','IncMr','ceMa','IncMa')
 
 %% Plot
 palette = parula(3);
-% (1) RT (Supp. Fig. 6C)
+% (1) RT (Extended Data Figure 2C)
 [~,p1] = sort(mean(IncMr,2),'descend');
 r1 = 1:nsSubj;
 r1(p1) = r1;
@@ -270,7 +270,7 @@ xlabel('Incongruent trial reaction time (sec)','FontSize',16)
 ylabel('Congruency effect reaction time (sec)','FontSize',16)
 %title('C) Simulated data: Extended sampling','FontSize',19)
 
-% (2) Percent correct (Supp. Fig. 6F)
+% (2) Percent correct (Extended Data Figure 2F)
 clear r1 r2
 [~,p1] = sort(mean(IncMa,2),'descend');
 r1 = 1:nsSubj;
