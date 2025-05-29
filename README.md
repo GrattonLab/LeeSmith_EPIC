@@ -5,7 +5,7 @@
 
 ### 1.2 Citation
 - The codes provided here are based on the methods described in the following article: <br/>
-Lee, H. J., Smith, D. M., Hauenstein, C., Dworetsky, A., Kraus, B. T., Dorn, M., Nee, D. E., & Gratton, C. (2025). [Precise individual measures of inhibitory control](https://osf.io/preprints/psyarxiv/rj2bu_v1). *Nature Human Behaviour*
+Lee, H. J., Smith, D. M., Hauenstein, C., Dworetsky, A., Kraus, B. T., Dorn, M., Nee, D. E., & Gratton, C. (2025). [Precise individual measures of inhibitory control](https://www.nature.com/articles/s41562-025-02198-2). *Nature Human Behaviour*
 
 ### 1.3 Features
 - All analyses can be replicated with the provided datasets and scripts.
